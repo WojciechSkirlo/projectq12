@@ -1,0 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: red;
+}
+
+main {
+    display: flex;
+    height: 100vh;
+}
+
+#left-container {
+    background: #f7d794;
+    flex-basis: 25%;
+}
+
+section#right-container {
+    flex-basis: 75%;
+}
