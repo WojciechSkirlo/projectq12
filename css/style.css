@@ -15,7 +15,7 @@
 }
 
 body {
-    font-size: 18px;
+    font-size: 17px;
 }
 
 main {
@@ -98,8 +98,14 @@ span.ripples {
     }
 }
 
-
 /* Main section */
+h2 {
+    font-size: 3.2rem;
+    margin-bottom: 30px;
+    color: var(--third-color);
+    text-align: center;
+}
+
 #right-container {
     flex-basis: 75%;
     display: flex;
@@ -110,44 +116,43 @@ span.ripples {
 
 #right-container .wrapper {
     display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 #right-container h4 {
     margin-top: 50px;
 }
 
-#right-container .wrapper .img-container svg,
-#right-container .wrapper #img-up svg {
-    width: 100%;
-    height: 100%;
-}
-
-#right-container .wrapper .img-container {
+#right-container .wrapper #img-container {
     margin-right: 50px;
     flex-basis: 300px;
+    width: 300px;
+    height: 100%;
     order: 1;
 }
 
 #right-container .wrapper #img-up {
     margin-left: 50px;
     flex-basis: 300px;
-    order: 3;
+    width: 300px;
+    height: 100%;
+    order: 2;
 }
 
-h2 {
-    font-size: 3.2rem;
-    margin-bottom: 30px;
-    color: var(--third-color);
-    text-align: center;
+#right-container .wrapper #img-container svg,
+#right-container .wrapper #img-up svg {
+    width: 100%;
+    height: 100%;
 }
 
 /* Wrapper sign-in */
 #right-container .wrapper .sign-in {
     order: 2;
     display: flex;
-    flex-grow: 1;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 #right-container .wrapper .sign-in h2 {
@@ -180,6 +185,8 @@ span.gradient {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    flex-basis: 100%;
 }
 
 input[type="submit"] {
@@ -246,11 +253,16 @@ input[type="submit"]:hover {
     position: relative;
 }
 
-i.fa-eye,
+i.fa-eye {
+    cursor: pointer;
+    position: absolute;
+    color: var(--third-color);
+}
+
 i.fa-eye-slash {
     cursor: pointer;
-    display: none;
     position: absolute;
+    display: none;
     color: var(--third-color);
 }
 
@@ -301,7 +313,7 @@ footer p {
 }
 
 footer p:first-child {
-    margin-right: 20px;
+    margin-right: 5px;
 }
 
 footer p a {
