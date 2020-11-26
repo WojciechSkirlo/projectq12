@@ -1,5 +1,99 @@
+<?php
+session_start();
+if (isset($_POST['email'])) {
+    //Validation
+    $validation_OK = true;
+
+    //Checking login
+    $login = $_POST['login'];
+    if (strlen($login) < 3 || (strlen($login) > 25)) {
+        $validation_OK = false;
+        $_SESSION['e_login'] = "Login must be between 3 and 25 characters long!";
+    }
+    if (ctype_alnum($login) == false) {
+        $validation_OK = false;
+        $_SESSION['e_login'] = "Login can only consist of letters and numbers";
+    }
+
+    //Checking email
+    $email = $_POST['email'];
+    $emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
+    if ((filter_var($emailB, FILTER_VALIDATE_EMAIL) == false) || ($emailB != $email)) {
+        $validation_OK = false;
+        $_SESSION['e_email'] = "Please enter a valid e-mail address";
+    }
+
+    //Checking password
+    $password = $_POST['password'];
+    $repeatpassword = $_POST['repeat-password'];
+
+    if ((strlen($password) < 8) || (strlen($password) > 30)) {
+        $validation_OK = false;
+        $_SESSION['e_password'] = "The password must be 8 to 30 characters long";
+    }
+
+    if ($password != $repeatpassword) {
+        $validation_OK = false;
+        $_SESSION['e_password'] = "The passwords provided do not match";
+    }
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    //Remember data
+    $_SESSION['fr_login'] = $login;
+    $_SESSION['fr_email'] = $email;
+    $_SESSION['fr_password'] = $password;
+    $_SESSION['fr_repeat_password'] = $repeatpassword;
+
+    require_once "connect.php";
+    mysqli_report(MYSQLI_REPORT_STRICT);
+    try {
+        $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+        if ($link->connect_errno != 0) {
+            throw new Exception(mysqli_connect_errno());
+        } else {
+            //Email exist
+            $result = $link->query("SELECT id FROM users WHERE email='$email'");
+            if (!$result) {
+                throw new Exception($link->error);
+            }
+            $how_many_emails = $result->num_rows;
+            if ($how_many_emails > 0) {
+                $validation_OK = false;
+                $_SESSION['e_email'] = "There is already an account assigned to this email";
+            }
+
+            //CLogin exist
+            $result = $link->query("SELECT id FROM users WHERE user='$login'");
+            if (!$result) {
+                throw new Exception($link->error);
+            }
+            $how_many_logins = $result->num_rows;
+            if ($how_many_logins > 0) {
+                $validation_OK = false;
+                $_SESSION['e_login'] = "There is already a user with this login";
+            }
+
+            if ($validation_OK == true) {
+                if ($link->query("INSERT INTO users VALUES(NULL, '$login','$email', '$password_hash')")) {
+                    $_SESSION['successful_registration'] = true;
+                    header('Location: successful.php');
+                } else {
+                    throw new Exception($link->error);
+                }
+            }
+
+            $link->close();
+        }
+    } catch (Exception $e) {
+        echo "Server error! Sorry :/";
+        echo "<br/> Information for the developer: " . $e;
+    }
+}
+?>
+
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -17,7 +111,6 @@
 
 <body>
     <main>
-
         <!-- Aside section -->
         <section id="left-container">
             <div class="sign-up-link">
@@ -34,25 +127,84 @@
             <div class="wrapper">
                 <div class="sign-in">
                     <h2><span class="gradient">Sign</span> <span class="line">up</span></h2>
-                    <form action="login.php" method="POST" class="sign-in-form">
+                    <form method="POST" class="sign-in-form">
+
+                        <!-- Login input -->
                         <div class="input-field">
                             <i class="fas fa-user"></i>
-                            <input type="text" name="login" placeholder="Login" />
-                            <div class="box-info"></div>
+                            <input type="text" name="login" placeholder="Login" value="<?php
+                                                                                        if (isset($_SESSION['fr_login'])) {
+                                                                                            echo $_SESSION['fr_login'];
+                                                                                            unset($_SESSION['fr_login']);
+                                                                                        }
+                                                                                        ?>" />
+                            <div class="box-info">
+                                <?php
+                                if (isset($_SESSION['e_login'])) {
+                                    echo '<i class="fas fa-times error"></i>';
+                                }
+                                ?>
+                            </div>
+                            <?php
+                            if (isset($_SESSION['e_login'])) {
+                                echo '<div class="info-error">';
+                                echo $_SESSION['e_login'];
+                                unset($_SESSION['e_login']);
+                                echo '</div>';
+                            }
+                            ?>
                         </div>
+
+                        <!-- Email input -->
                         <div class="input-field">
                             <i class="fas fa-envelope"></i>
-                            <input type="text" name="email" placeholder="E-mail" />
-                            <div class="box-info"></div>
+                            <input type="text" name="email" placeholder="E-mail" value="<?php
+                                                                                        if (isset($_SESSION['fr_email'])) {
+                                                                                            echo $_SESSION['fr_email'];
+                                                                                            unset($_SESSION['fr_email']);
+                                                                                        }
+                                                                                        ?>" />
+                            <div class="box-info">
+                                <?php
+                                if (isset($_SESSION['e_email'])) {
+                                    echo '<i class="fas fa-times error"></i>';
+                                }
+                                ?>
+                            </div>
+                            <?php
+                            if (isset($_SESSION['e_email'])) {
+                                echo '<div class="info-error">';
+                                echo $_SESSION['e_email'];
+                                unset($_SESSION['e_email']);
+                                echo '</div>';
+                            }
+                            ?>
                         </div>
+
+                        <!-- Password input -->
                         <div class="input-field">
                             <i class="fas fa-key"></i>
                             <input type="password" name="password" placeholder="Password" class="password" />
                             <div class="box-info">
                                 <i class="far fa-eye"></i>
                                 <i class="far fa-eye-slash"></i>
+                                <?php
+                                if (isset($_SESSION['e_password'])) {
+                                    echo '<i class="fas fa-times error"></i>';
+                                }
+                                ?>
                             </div>
+                            <?php
+                            if (isset($_SESSION['e_password'])) {
+                                echo '<div class="info-error">';
+                                echo $_SESSION['e_password'];
+                                unset($_SESSION['e_password']);
+                                echo '</div>';
+                            }
+                            ?>
                         </div>
+
+                        <!-- Repeat password input -->
                         <div class="input-field">
                             <i class="fas fa-redo-alt"></i>
                             <input type="password" name="repeat-password" placeholder="Repeat password" class="password" />

@@ -1,12 +1,12 @@
 <?php
 session_start();
-if ((isset($_SESSION['zalogowany'])) && ($_SESSION['zalogowany'] == true)) {
+if ((isset($_SESSION['logged'])) && ($_SESSION['logged'] == true)) {
     header('Location: page.php');
     exit();
 }
 ?>
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -52,6 +52,19 @@ if ((isset($_SESSION['zalogowany'])) && ($_SESSION['zalogowany'] == true)) {
                             <div class="box-info">
                                 <i class="far fa-eye"></i>
                                 <i class="far fa-eye-slash"></i>
+                                <?php
+                                if (isset($_SESSION['error'])) {
+                                    echo '<i class="fas fa-times error"></i>';
+                                }
+                                ?>
+                            </div>
+                            <div class="info-error">
+                                <?php
+                                if (isset($_SESSION['error'])) {
+                                    echo $_SESSION['error'];
+                                    unset($_SESSION['error']);
+                                }
+                                ?>
                             </div>
                         </div>
                         <input type="submit" value="login" class="btn" />
