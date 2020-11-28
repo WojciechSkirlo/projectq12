@@ -25,12 +25,12 @@ if ($link->connect_errno != 0) {
 
                 $_SESSION['logged'] = true;
                 $_SESSION['id'] = $cell['id'];
-                $_SESSION['login'] = $cell['login'];
+                $_SESSION['login'] = $cell['user'];
                 $_SESSION['email'] = $cell['email'];
 
                 unset($_SESSION['error']);
                 $result->close();
-                header('Location: page.php');
+                header('Location: home.php');
             } else {
                 $_SESSION['error'] = 'Incorrect login or password!';
                 header('Location: index.php');

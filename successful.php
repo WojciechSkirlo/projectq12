@@ -10,8 +10,8 @@ if (!isset($_SESSION['successful_registration'])) {
 //Delete variables from form
 if (isset($_SESSION['fr_login'])) unset($_SESSION['fr_login']);
 if (isset($_SESSION['fr_email'])) unset($_SESSION['fr_email']);
-if (isset($_SESSION['fr_password'])) unset($_SESSION['fr_password']);
-if (isset($_SESSION['fr_repeat_password'])) unset($_SESSION['fr_repeat_password']);
+// if (isset($_SESSION['fr_password'])) unset($_SESSION['fr_password']);
+// if (isset($_SESSION['fr_repeat_password'])) unset($_SESSION['fr_repeat_password']);
 
 //Delete error from registration
 if (isset($_SESSION['e_login'])) unset($_SESSION['e_login']);
@@ -30,15 +30,18 @@ if (isset($_SESSION['e_password'])) unset($_SESSION['e_password']);
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <link rel="Shortcut icon" href="img/logo.svg" />
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-
-    Successful Registration!
-    <a href="index.php">Sign in</a>
-
+    <div id="success-regi">
+        <h1><span class="gradient">Successful Registration!</span></h1>
+        <div class="btn-sign-up">
+            <a href="index.php" class="btn">Sign in</a>
+        </div>
+    </div>
 </body>
 
 </html>
