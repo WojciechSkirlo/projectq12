@@ -16,6 +16,7 @@
 
 body {
     font-size: 17px;
+    scroll-behavior: smooth;
 }
 
 main {
@@ -323,13 +324,30 @@ input:-webkit-autofill:active {
 }
 
 /* Nav */
-nav {
+nav#main-nav {
     width: 100%;
     border-top: 4px solid var(--theme-color-gradient);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: sticky;
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -ms-sticky;
+    position: -o-sticky;
+    top: 0;
+    left: 0;
+    background: #fff;
+    z-index: 5;
+    transition: 500ms;
+    -webkit-box-shadow: 0px 2px 50px -25px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 2px 50px -25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 50px -25px rgba(0, 0, 0, 0.2);
+}
+
+nav#main-nav.hide {
+    top: -100%;
 }
 
 nav .nav-up {
@@ -341,9 +359,31 @@ nav .nav-up {
 
 nav .nav-up .info {
     flex-basis: 300px;
-    height: 100%;
-    /* background: green; */
     align-self: center;
+    height: auto;
+    align-self: center;
+    font-size: 22px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+nav .nav-up .info a .info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px 20px;
+}
+
+nav .nav-up .info a .info-wrapper:hover {
+    background: var(--theme-color-gradient);
+}
+
+nav .nav-up .info .info-wrapper span {
+    font-size: 17px;
+    margin-top: 3px;
 }
 
 nav .nav-up .logo {
@@ -358,7 +398,7 @@ nav .nav-up .logo {
 }
 
 nav .nav-up .logo span {
-    font-size: 25px;
+    font-size: 22px;
 }
 
 nav .nav-up a {
@@ -372,7 +412,7 @@ nav .nav-up .logo img {
 
 nav .nav-up .login {
     flex-basis: 300px;
-    height: 70px;
+    height: auto;
     align-self: center;
     font-size: 22px;
     position: relative;
@@ -387,12 +427,7 @@ nav .nav-up .login .login-wrapper {
     align-items: center;
     text-align: center;
     cursor: pointer;
-    height: 100%;
-    width: 100px;
-}
-
-nav .nav-up .login .login-wrapper:hover span {
-    text-decoration: underline;
+    padding: 10px 20px;
 }
 
 nav .nav-up .login .login-wrapper:hover {
@@ -481,7 +516,7 @@ nav .nav-down .wrapper a:hover {
 
 #video {
     width: 100%;
-    height: 650px;
+    height: 700px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -501,7 +536,7 @@ nav .nav-down .wrapper a:hover {
 }
 
 #video .bg-video {
-    background: rgba(211, 170, 170, 0.25);
+    background: rgba(255, 255, 255, 0.25);
     position: absolute;
     top: 0;
     left: 0;
@@ -537,13 +572,278 @@ nav .nav-down .wrapper a:hover {
     position: relative;
 }
 
-#quotation h3 img {
+/* Section with quote for welcome */
+section#home {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section#home .wrapper {
+    padding: 100px 50px;
+    text-align: center;
+}
+
+section#home .wrapper img {
+    height: 70px;
+}
+
+section#home .wrapper h3 {
+    margin-top: 30px;
+    font-size: 2rem;
+}
+
+section#home .wrapper h3 span.author {
+    color: var(--theme-color-gradient);
+}
+
+/* Section with last add quotes */
+section#main-quote {
+    width: 100%;
+    display: flex;
+}
+
+section#main-quote .left-wrapper {
+    flex-basis: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 50px 50px 50px 0;
+}
+
+section#main-quote .left-wrapper .box {
+    flex-basis: 70%;
+}
+
+section#main-quote .left-wrapper .box img {
+    height: 35px;
+}
+
+section#main-quote .left-wrapper .box .quote-box {
+    margin: 50px 0 0 0;
+    font-size: 20px;
+    position: relative;
+}
+
+section#main-quote .left-wrapper .box .quote-box::before {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 0px;
+    height: 3px;
+    background: var(--theme-color);
+    transition: 250ms;
+}
+
+section#main-quote .left-wrapper .box .quote-box p span a {
+    text-decoration: none;
+    color: var(--third-color);
+}
+
+section#main-quote .left-wrapper .box .quote-box p span a:hover {
+    text-decoration: underline;
+}
+
+section#main-quote .left-wrapper .box .quote-box:hover::before {
+    width: 100%;
+}
+
+section#main-quote .left-wrapper .box h3,
+section#main-quote .right-wrapper .box h3 {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+section#main-quote .right-wrapper {
+    flex-basis: 40%;
+    display: flex;
+    height: auto;
+    background: var(--theme-color);
+    padding: 50px 0 50px 50px;
+}
+
+section#main-quote .right-wrapper .box {
+    flex-basis: 50%;
+}
+
+section#authors {
+    width: 100%;
+    padding: 100px 0;
+    display: flex;
+    justify-content: center;
+}
+
+section#authors .wrapper {
+    width: 80%;
+    height: 300px;
+    display: flex;
+    justify-content: space-between;
+}
+
+section#authors .wrapper .box {
+    flex-basis: 24.8%;
+    height: 100%;
+    background: var(--second-color);
+}
+
+section#quote-img {
+    width: 100%;
+    height: 700px;
+    display: flex;
+}
+
+section#quote-img .quote-box {
+    flex-basis: 25%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+section#quote-img .quote-box .background {
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.50);
+    position: absolute;
+    top: 0;
+    right: -100%;
+    z-index: 1;
+    transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
+    padding: 50px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+section#quote-img .quote-box .background .text {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+section#quote-img .quote-box:first-child .background .text {
+    flex-basis: 50%;
+}
+
+section#quote-img .quote-box .background .text h3 {
+    color: var(--third-color);
+    font-size: 2rem;
+}
+
+section#quote-img .quote-box .background .text .category {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+section#quote-img .quote-box .background .text .category h3 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+section#quote-img .quote-box .background .text h3 a {
+    color: var(--third-color);
+    text-decoration: none;
+}
+
+section#quote-img .quote-box .background .text h3 a:hover {
+    text-decoration: underline;
+}
+
+section#quote-img .quote-box:hover .background {
+    right: 0;
+}
+
+section#quote-img .quote-box:hover img {
+    transform: scale(1.1);
+}
+
+section#quote-img .quote-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+section#quote-img .quote-box:first-child {
+    flex-basis: 50%;
+}
+
+/* Add quote */
+section#addquote {
+    display: flex;
+    display: flex;
+    margin: 0 0 100px 0;
+}
+
+section#addquote .left-wrapper {
+    flex-basis: 40%;
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    padding: 50px 50px 50px 0;
+    background: var(--theme-color);
+}
+
+section#addquote .left-wrapper .box {
+    flex-basis: 50%;
+}
+
+section#addquote .left-wrapper h3,
+section#addquote .right-wrapper h3 {
+    font-size: 2.5rem;
+    color: var(--third-color);
+}
+
+section#addquote .right-wrapper h3 img {
     height: 40px;
-    margin: -10px 3px;
+    margin-left: 10px;
+}
+
+section#addquote .right-wrapper {
+    flex-basis: 60%;
+    height: 300px;
+    display: flex;
+    padding: 50px 0 50px 50px;
 }
 
 
-/* Footer */
+/* Scroll up */
+.scroll-up {
+    width: 40px;
+    height: 40px;
+    background: var(--third-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    opacity: 0.7;
+    transition: 250ms;
+    display: none;
+    z-index: 2;
+}
+
+.scroll-up:hover {
+    opacity: 0.95;
+}
+
+.scroll-up a {
+    text-decoration: none;
+    color: #fff;
+    flex-basis: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+/* Footer for sign-in and sign-up */
 footer {
     width: 100%;
     height: 70px;
@@ -570,6 +870,77 @@ footer p a {
 
 footer p a:hover {
     text-decoration: underline;
+}
+
+/* Footer for whole page */
+#home-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    padding: 0;
+    height: auto;
+    border-bottom: 4px solid var(--theme-color-gradient);
+}
+
+#home-footer .wrapper {
+    flex-basis: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+#home-footer .wrapper .up {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    padding: 50px 0 0 0;
+}
+
+#home-footer .wrapper .up .box {
+    flex-basis: 25%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#home-footer .wrapper .up .box a {
+    text-decoration: none;
+    color: var(--third-color);
+}
+
+#home-footer .wrapper .up .box a:hover {
+    text-decoration: underline;
+}
+
+#home-footer .wrapper .up .box a .logo {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 20px;
+}
+
+#home-footer .wrapper .up .box a .logo img {
+    height: 125px;
+    margin-bottom: 10px;
+}
+
+#home-footer .wrapper .down {
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#home-footer .wrapper .down p {
+    color: var(--third-color);
+    font-size: 17px;
+}
+
+#home-footer .wrapper .down p a {
+    color: var(--third-color);
 }
 
 /* Animation SVG */

@@ -27,6 +27,7 @@ if ($link->connect_errno != 0) {
                 $_SESSION['id'] = $cell['id'];
                 $_SESSION['login'] = $cell['user'];
                 $_SESSION['email'] = $cell['email'];
+                $_SESSION['role'] = $cell['role'];
 
                 unset($_SESSION['error']);
                 $result->close();

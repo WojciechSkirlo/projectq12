@@ -75,7 +75,7 @@ if (isset($_POST['email'])) {
             }
 
             if ($validation_OK == true) {
-                if ($link->query("INSERT INTO users VALUES(NULL, '$login','$email', '$password_hash')")) {
+                if ($link->query("INSERT INTO users VALUES(NULL, '$login','$email', '$password_hash', 'user')")) {
                     $_SESSION['successful_registration'] = true;
                     header('Location: successful.php');
                 } else {

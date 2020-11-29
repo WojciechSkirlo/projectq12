@@ -12,7 +12,7 @@ if (!isset($_SESSION['logged'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ProjectQ12 | Home</title>
+    <title>ProjectQ12 | Add quotes</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
@@ -88,49 +88,25 @@ if (!isset($_SESSION['logged'])) {
     <section id="home">
         <div class="wrapper">
             <img src="img/logo.svg" />
-            <h3>„You only live once, but if you do it right, once is enough.”<span class="author"> - Mae West</span></h3>
+            <h3>„The secret of change is to focus all of your energy not on fighting the old, but on building the new”<span class="author"> - Socrates</span></h3>
         </div>
     </section>
-    <section id="main-quote">
+    <section id="addquote">
         <div class="left-wrapper">
             <div class="box">
-                <h3>Recently added quotes</h3>
-                <div class="quote-box">
-                    <img src="img/logo-red.svg" />
-                    <p>„Be the change that you wish to see in the world.”<span> - <a href="#">Mahatma Gandhi</a></span></p>
-                </div>
-                <div class="quote-box">
-                    <img src="img/logo-red.svg" />
-                    <p>„Don’t walk in front of me… I may not follow
-                        Don’t walk behind me… I may not lead
-                        Walk beside me… just be my friend.”<span> - <a href="#">Albert Camus</a></span></p>
-                </div>
-                <div class="quote-box">
-                    <img src="img/logo-red.svg" />
-                    <p>„A friend is someone who knows all about you and still loves you.”<span> - <a href="#">Elbert Hubbard</a></span></p>
-                </div>
-                <div class="quote-box">
-                    <img src="img/logo-red.svg" />
-                    <p>„Live as if you were to die tomorrow. Learn as if you were to live forever.”<span> - <a href="#">Mahatma Gandhi</a></span></p>
-                </div>
-                <div class="quote-box">
-                    <img src="img/logo-red.svg" />
-                    <p>„I'm selfish, impatient and a little insecure. I make mistakes, I am out of control and at times hard to handle. But if you can't handle me at my worst, then you sure as hell don't deserve me at my best.”<span> - <a href="#">Marilyn Monroe</a></span></p>
-                </div>
+                <h3>Rules</h3>
             </div>
         </div>
         <div class="right-wrapper">
             <div class="box">
-                <h3>Who we are?</h3>
+                <h3>So.. Let's add some quote <img src="img/logo-red.svg" /></h3>
+                <textarea name="quote-text" placeholder="Text of the quote"></textarea>
+                <select id="select-author">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
             </div>
-        </div>
-    </section>
-    <section id="authors">
-        <div class="wrapper">
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
         </div>
     </section>
     <section id="quote-img">
