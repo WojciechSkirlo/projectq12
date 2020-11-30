@@ -63,7 +63,7 @@ if (isset($_POST['email'])) {
                 $_SESSION['e_email'] = "There is already an account assigned to this email";
             }
 
-            //CLogin exist
+            //Login exist
             $result = $link->query("SELECT id FROM users WHERE user='$login'");
             if (!$result) {
                 throw new Exception($link->error);
@@ -75,7 +75,7 @@ if (isset($_POST['email'])) {
             }
 
             if ($validation_OK == true) {
-                if ($link->query("INSERT INTO users VALUES(NULL, '$login','$email', '$password_hash', 'user')")) {
+                if ($link->query("INSERT INTO users(user, email, password) VALUES('$login','$email', '$password_hash')")) {
                     $_SESSION['successful_registration'] = true;
                     header('Location: successful.php');
                 } else {

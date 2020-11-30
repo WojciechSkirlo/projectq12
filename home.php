@@ -60,7 +60,7 @@ if (!isset($_SESSION['logged'])) {
         </div>
         <div class="nav-down">
             <div class="wrapper">
-                <a href="#">home</a>
+                <a href="home.php">home</a>
                 <a href="#">the latest</a>
                 <a href="#">love</a>
                 <a href="#">woman</a>
@@ -95,11 +95,54 @@ if (!isset($_SESSION['logged'])) {
         <div class="left-wrapper">
             <div class="box">
                 <h3>Recently added quotes</h3>
-                <div class="quote-box">
-                    <img src="img/logo-red.svg" />
+                <?php
+                require_once "connect.php";
+
+                try {
+                    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+                    if ($link->connect_errno != 0) {
+                        throw new Exception(mysqli_connect_errno());
+                    } else {
+                        $result = $link->query("SELECT quotes.id, quotes.text_quote, quotes.creation_date, authors.name, authors.surname, users.user FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id ORDER BY quotes.creation_date DESC LIMIT 5");
+                        if (!$result) {
+                            throw new Exception($link->error);
+                        }
+                        $how_many_recent_quotes = $result->num_rows;
+                        if ($how_many_recent_quotes > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // $convertDate=Date("H:i:s d-m-Y");
+                                echo '<div class="quote-box">';
+                                echo '<div class="quote-box-info">';
+                                echo '<img src="img/logo-red.svg" />';
+                                echo '<div class="information">';
+                                echo '<p class="add-by">' . $row['user'] . '</p>';
+                                echo '<p class="creation-data">' . $row['creation_date'] . '</p>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '<p>„' . $row['text_quote'] . '”<span> - <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></span></p>';
+                                echo '</div>';
+                            }
+                        }
+
+                        $link->close();
+                    }
+                } catch (Exception $e) {
+                    echo "Server error! Sorry :/";
+                    echo "<br/> Information for the developer: " . $e;
+                }
+
+                ?>
+                <!-- <div class="quote-box">
+                    <div class="quote-box-info">
+                        <img src="img/logo-red.svg" />
+                        <div class="information">
+                            <p class="add-by">Admin</p>
+                            <p class="creation-data">2020-11-30 9:30:00</p>
+                        </div>
+                    </div>
                     <p>„Be the change that you wish to see in the world.”<span> - <a href="#">Mahatma Gandhi</a></span></p>
-                </div>
-                <div class="quote-box">
+                </div> -->
+                <!-- <div class="quote-box">
                     <img src="img/logo-red.svg" />
                     <p>„Don’t walk in front of me… I may not follow
                         Don’t walk behind me… I may not lead
@@ -116,7 +159,7 @@ if (!isset($_SESSION['logged'])) {
                 <div class="quote-box">
                     <img src="img/logo-red.svg" />
                     <p>„I'm selfish, impatient and a little insecure. I make mistakes, I am out of control and at times hard to handle. But if you can't handle me at my worst, then you sure as hell don't deserve me at my best.”<span> - <a href="#">Marilyn Monroe</a></span></p>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="right-wrapper">

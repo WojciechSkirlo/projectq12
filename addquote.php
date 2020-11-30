@@ -12,7 +12,7 @@ if (!isset($_SESSION['logged'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ProjectQ12 | Add quotes</title>
+    <title>ProjectQ12 | Add quote</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
@@ -60,7 +60,7 @@ if (!isset($_SESSION['logged'])) {
         </div>
         <div class="nav-down">
             <div class="wrapper">
-                <a href="#">home</a>
+                <a href="home.php">home</a>
                 <a href="#">the latest</a>
                 <a href="#">love</a>
                 <a href="#">woman</a>
@@ -100,12 +100,52 @@ if (!isset($_SESSION['logged'])) {
         <div class="right-wrapper">
             <div class="box">
                 <h3>So.. Let's add some quote <img src="img/logo-red.svg" /></h3>
-                <textarea name="quote-text" placeholder="Text of the quote"></textarea>
-                <select id="select-author">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                </select>
+                <form>
+                    <p><img src="img/logo.svg" /></p>
+                    <div class="quote-box">
+                        <textarea name="quote-text" maxlength="512" placeholder="Text of the quote" required></textarea>
+                        <label for="quote-text" class="label-text"></label>
+                    </div>
+                    <p><img src="img/logo.svg" /></p>
+                    <div class="author-wrapper">
+                        <div class="box-author">
+                            <span>Select the author of the quote: </span>
+                            <select name="select-author" required>
+                                <option selected></option>
+                                <?php
+                                require_once "connect.php";
+
+                                try {
+                                    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+                                    if ($link->connect_errno != 0) {
+                                        throw new Exception(mysqli_connect_errno());
+                                    } else {
+                                        $result = $link->query("SELECT * FROM authors");
+                                        if (!$result) {
+                                            throw new Exception($link->error);
+                                        }
+                                        $how_many_authors = $result->num_rows;
+                                        if ($how_many_authors > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<option>" . $row['name'] . " " . $row['surname'] . "</option>";
+                                            }
+                                        }
+
+                                        $link->close();
+                                    }
+                                } catch (Exception $e) {
+                                    echo "Server error! Sorry :/";
+                                    echo "<br/> Information for the developer: " . $e;
+                                }
+
+                                ?>
+                            </select>
+                        </div>
+                        <p>If you can't find the author, you can add him, but make sure that he hasn't already been added.</p>
+                        <div class="add-author">Add author</div>
+                    </div>
+                    <input type="submit" value="Add quote" />
+                </form>
             </div>
         </div>
     </section>
