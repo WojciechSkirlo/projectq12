@@ -4,6 +4,71 @@ if (!isset($_SESSION['logged'])) {
     header('Location: index.php');
     exit();
 }
+
+if (isset($_POST['quote-text'])) {
+    // Validation
+    $quote_OK = true;
+
+    // Checking text of quote
+    $text_quote = $_POST['quote-text'];
+    if (strlen($text_quote) <= 8 || (strlen($text_quote) >= 512)) {
+        $quote_OK = false;
+        $_SESSION['e_quote_text'] = "The text of the quote cannot be less than 8 and more than 512 characters long";
+    }
+
+
+    require_once "connect.php";
+    try {
+        $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+        if ($link->connect_errno != 0) {
+            throw new Exception(mysqli_connect_errno());
+        } else {
+            $text_quote = $_POST['quote-text'];
+            $author_id = $_POST['select-author'];
+            $category_id = $_POST['select-category'];
+            $login = $_SESSION['login'];
+            if ($result = $link->query("SELECT * FROM users WHERE user='$login'")) {
+                $row = $result->num_rows;
+                if ($row > 0) {
+                    while ($cell = $result->fetch_assoc()) {
+                        $login_id = $cell['id'];
+                    }
+                }
+            }
+
+            // Check text_quote
+            $text_quote_converted = htmlentities($text_quote, ENT_QUOTES);
+
+            // Quote exist
+            $result = $link->query("SELECT id FROM quotes WHERE text_quote='$text_quote_converted'");
+            if (!$result) {
+                throw new Exception($link->error);
+            }
+            $how_many_quotes = $result->num_rows;
+            if ($how_many_quotes > 0) {
+                $quote_OK = false;
+                $_SESSION['e_quote_text'] = "The quote already exists in our database";
+            }
+
+            if ($quote_OK == true) {
+                if ($link->query("INSERT INTO quotes(text_quote, author_id, user_id, categories_id) VALUES('$text_quote_converted', '$author_id', '$login_id', '$category_id')")) {
+                    $_SESSION['successful_quote_add'] = true;
+                    header('Location: quoteadded.php');
+                    $_SESSION['text_quote'] = $text_quote_converted;
+                    $_SESSION['author_of_quote'] = $author_id;
+                    $_SESSION['category_quote'] = $category_id;
+                } else {
+                    throw new Exception($link->error);
+                }
+            }
+
+            $link->close();
+        }
+    } catch (Exception $e) {
+        echo "Server error! Sorry :/";
+        echo "<br/> Information for the developer: " . $e;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,18 +165,61 @@ if (!isset($_SESSION['logged'])) {
         <div class="right-wrapper">
             <div class="box">
                 <h3>So.. Let's add some quote <img src="img/logo-red.svg" /></h3>
-                <form>
+                <form method="POST">
                     <p><img src="img/logo.svg" /></p>
                     <div class="quote-box">
                         <textarea name="quote-text" maxlength="512" placeholder="Text of the quote" required></textarea>
                         <label for="quote-text" class="label-text"></label>
                     </div>
+                    <h4>
+                        <?php
+                        if (isset($_SESSION['e_quote_text'])) {
+                            echo $_SESSION['e_quote_text'];
+                            unset($_SESSION['e_quote_text']);
+                        }
+                        ?>
+                    </h4>
                     <p><img src="img/logo.svg" /></p>
+                    <div class="wrapper-category">
+                        <div class="box-category">
+                            <span>Category: </span>
+                            <select name="select-category" required>
+                                <option value="" selected>Select the category</option>
+                                <?php
+                                require_once "connect.php";
+
+                                try {
+                                    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+                                    if ($link->connect_errno != 0) {
+                                        throw new Exception(mysqli_connect_errno());
+                                    } else {
+                                        $result = $link->query("SELECT * FROM categories");
+                                        if (!$result) {
+                                            throw new Exception($link->error);
+                                        }
+                                        $how_many_categories = $result->num_rows;
+                                        if ($how_many_categories > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<option value=" . $row['id'] . ">" . $row['name'] . "</option>";
+                                            }
+                                        }
+
+                                        $link->close();
+                                    }
+                                } catch (Exception $e) {
+                                    echo "Server error! Sorry :/";
+                                    echo "<br/> Information for the developer: " . $e;
+                                }
+
+                                ?>
+                            </select>
+                        </div>
+                    </div>
                     <div class="author-wrapper">
                         <div class="box-author">
-                            <span>Select the author of the quote: </span>
+                            <span>Author of the quote: </span>
                             <select name="select-author" required>
-                                <option selected></option>
+                                <option value="" selected>Select the author</option>
                                 <?php
                                 require_once "connect.php";
 
@@ -127,7 +235,7 @@ if (!isset($_SESSION['logged'])) {
                                         $how_many_authors = $result->num_rows;
                                         if ($how_many_authors > 0) {
                                             while ($row = $result->fetch_assoc()) {
-                                                echo "<option>" . $row['name'] . " " . $row['surname'] . "</option>";
+                                                echo "<option value=" . $row['id'] . ">" . $row['name'] . " " . $row['surname'] . "</option>";
                                             }
                                         }
 
@@ -137,14 +245,13 @@ if (!isset($_SESSION['logged'])) {
                                     echo "Server error! Sorry :/";
                                     echo "<br/> Information for the developer: " . $e;
                                 }
-
                                 ?>
                             </select>
                         </div>
                         <p>If you can't find the author, you can add him, but make sure that he hasn't already been added.</p>
                         <div class="add-author">Add author</div>
                     </div>
-                    <input type="submit" value="Add quote" />
+                    <input type="submit" value="Add quote" name="add-quote" />
                 </form>
             </div>
         </div>
@@ -197,6 +304,7 @@ if (!isset($_SESSION['logged'])) {
                             <img src="img/logo.svg" />
                         </div>
                     </a>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in tristique nulla. Suspendisse mattis, dolor ut luctus convallis, arcu nibh vulputate risus, in sagittis risus erat ac sem.</p>
                 </div>
                 <div class="box"></div>
                 <div class="box"></div>

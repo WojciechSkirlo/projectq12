@@ -1,9 +1,19 @@
 <?php
 session_start();
-if (!isset($_SESSION['logged'])) {
+if (!isset($_SESSION['logged']) || (!isset($_SESSION['successful_quote_add']))) {
     header('Location: index.php');
     exit();
+} else {
+    unset($_SESSION['successful_quote_add']);
 }
+
+//Delete variables from form add_quote
+// if (isset($_SESSION['fr_login'])) unset($_SESSION['fr_login']);
+// if (isset($_SESSION['fr_email'])) unset($_SESSION['fr_email']);
+
+//Delete error from add_quote
+if (isset($_SESSION['e_quote_text'])) unset($_SESSION['e_quote_text']);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +22,7 @@ if (!isset($_SESSION['logged'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ProjectQ12 | Home</title>
+    <title>ProjectQ12 | The quote has been added</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
@@ -44,6 +54,7 @@ if (!isset($_SESSION['logged'])) {
             <div class="login">
                 <div class="login-info">
                     <?php
+                    $login = $_SESSION['login'];
                     echo '<div class="text-info">';
                     echo "<p><b>Login:</b> " . $_SESSION['login'] . "</p>";
                     echo "<p><b>E-mail:</b> " . $_SESSION['email'] . "</p>";
@@ -63,7 +74,6 @@ if (!isset($_SESSION['logged'])) {
                 <a href="home.php">home</a>
                 <a href="#">the latest</a>
                 <a href="#">love</a>
-                <a href="#">life</a>
                 <a href="#">woman</a>
                 <a href="#">man</a>
                 <a href="#">god</a>
@@ -89,14 +99,22 @@ if (!isset($_SESSION['logged'])) {
     <section id="home">
         <div class="wrapper">
             <img src="img/logo.svg" />
-            <h3>„You only live once, but if you do it right, once is enough.”<span class="author"> - Mae West</span></h3>
+            <h3>„The secret of change is to focus all of your energy not on fighting the old, but on building the new”<span class="author"> - Socrates</span></h3>
         </div>
     </section>
-    <section id="main-quote">
+    <section id="addquote">
         <div class="left-wrapper">
             <div class="box">
-                <h3>Recently added quotes</h3>
+                <h3>Rules</h3>
+            </div>
+        </div>
+        <div class="right-wrapper">
+            <div class="box">
+                <h3>Hurrah.. The quote has been added <img src="img/logo-red.svg" /></h3>
                 <?php
+                echo "<p>„";
+                echo $_SESSION['text_quote'];
+                echo "” - ";
                 require_once "connect.php";
 
                 try {
@@ -104,27 +122,29 @@ if (!isset($_SESSION['logged'])) {
                     if ($link->connect_errno != 0) {
                         throw new Exception(mysqli_connect_errno());
                     } else {
-                        $result = $link->query("SELECT quotes.id, quotes.text_quote, quotes.creation_date, authors.name, authors.surname, users.user, categories.name AS 'category', categories.id AS 'category_id'  FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id INNER JOIN categories ON categories.id=quotes.categories_id ORDER BY quotes.creation_date DESC LIMIT 5");
+                        // Change author_id to author name and surname
+                        $author_id = $_SESSION["author_of_quote"];
+                        $result = $link->query("SELECT * FROM authors WHERE id='$author_id'");
                         if (!$result) {
                             throw new Exception($link->error);
                         }
-                        $how_many_recent_quotes = $result->num_rows;
-                        if ($how_many_recent_quotes > 0) {
+                        $how_many_authors = $result->num_rows;
+                        if ($how_many_authors > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                $date = $row['creation_date'];
-                                $convertdate = strtotime($date);
-                                $date = date('d-m-Y H:i', $convertdate);
-                                echo '<div class="quote-box">';
-                                echo '<div class="quote-box-info">';
-                                echo '<img src="img/logo-red.svg" />';
-                                echo '<div class="information">';
-                                echo '<a href="home.php?id_category=' . $row['category_id'] . '"><p class="category">' . $row['category'] . '</p></a>';
-                                echo '<p class="add-by">' . $row['user'] . '</p>';
-                                echo '<p class="creation-data">' . $date . '</p>';
-                                echo '</div>';
-                                echo '</div>';
-                                echo '<p>„' . $row['text_quote'] . '”<span> - <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></span></p>';
-                                echo '</div>';
+                                echo "<span><a href=''>" . $row['name'] . " " . $row['surname'] . "</a></span>";
+                            }
+                        }
+
+                        // Change category id to name of the category
+                        $category_id = $_SESSION['category_quote'];
+                        $result = $link->query("SELECT * FROM categories WHERE id='$category_id'");
+                        if (!$result) {
+                            throw new Exception($link->error);
+                        }
+                        $how_many_categories = $result->num_rows;
+                        if ($how_many_categories > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<p>Category: <a href=''>" . $row['name'] .  "</a></p>";
                             }
                         }
 
@@ -134,22 +154,16 @@ if (!isset($_SESSION['logged'])) {
                     echo "Server error! Sorry :/";
                     echo "<br/> Information for the developer: " . $e;
                 }
-
                 ?>
+                <div class="wrapper-btn">
+                    <a href="addquote.php">
+                        <h4>Add another quote</h4>
+                    </a>
+                    <a href="home.php">
+                        <h4>Go to homepage</h4>
+                    </a>
+                </div>
             </div>
-        </div>
-        <div class="right-wrapper">
-            <div class="box">
-                <h3>Who we are?</h3>
-            </div>
-        </div>
-    </section>
-    <section id="authors">
-        <div class="wrapper">
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
         </div>
     </section>
     <section id="quote-img">
@@ -202,9 +216,7 @@ if (!isset($_SESSION['logged'])) {
                     </a>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in tristique nulla. Suspendisse mattis, dolor ut luctus convallis, arcu nibh vulputate risus, in sagittis risus erat ac sem.</p>
                 </div>
-                <div class="box">
-                    <p></p>
-                </div>
+                <div class="box"></div>
                 <div class="box"></div>
                 <div class="box"></div>
             </div>
