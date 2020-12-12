@@ -134,7 +134,7 @@ if (isset($_POST['quote-text'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ProjectQ12 | Add quote</title>
+    <title>ProjectQ12 | Add author</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
@@ -213,7 +213,7 @@ if (isset($_POST['quote-text'])) {
     <section id="home">
         <div class="wrapper">
             <img src="img/logo.svg" />
-            <h3>„The secret of change is to focus all of your energy not on fighting the old, but on building the new”<span class="author gradient"> - Socrates</span></h3>
+            <h3>„A writer is someone for whom writing is more difficult than it is for other people.”<span class="author gradient"> - Thomas Mann</span></h3>
         </div>
     </section>
     <section id="addquote">
@@ -224,7 +224,7 @@ if (isset($_POST['quote-text'])) {
         </div>
         <div class="right-wrapper">
             <div class="box">
-                <h3>So.. Let's add some quote <img src="img/logo-red.svg" /></h3>
+                <h3>Here you can add an author <img src="img/logo-red.svg" /></h3>
                 <form method="POST" enctype="multipart/form-data">
                     <p><img src="img/logo.svg" /></p>
                     <div class="quote-box">
@@ -243,44 +243,16 @@ if (isset($_POST['quote-text'])) {
                         }
                         ?>
                     </h4>
-                    <div class="wrapper-category">
-                        <div class="box-category">
-                            <span>Category: </span>
-                            <select name="select-category" id="category-id">
-                                <option value="" disabled selected hidden>Enter the category</option>
-                                <?php
-                                require_once "connect.php";
+                    <div class="wrapper-name-author">
+                        <div class="box-name-author">
 
-                                try {
-                                    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
-                                    if ($link->connect_errno != 0) {
-                                        throw new Exception(mysqli_connect_errno());
-                                    } else {
-                                        $result = $link->query("SELECT * FROM categories");
-                                        if (!$result) {
-                                            throw new Exception($link->error);
-                                        }
-                                        $how_many_categories = $result->num_rows;
-                                        if ($how_many_categories > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<option value=" . $row['id'] . ">" . $row['name'] . "</option>";
-                                            }
-                                        }
-                                        $link->close();
-                                    }
-                                } catch (Exception $e) {
-                                    echo "Server error! Sorry :/";
-                                    echo "<br/> Information for the developer: " . $e;
-                                }
-                                ?>
-                            </select>
                         </div>
                         <h4>
                             <?php
-                            if (isset($_SESSION['e_category_quote'])) {
-                                echo $_SESSION['e_category_quote'];
-                                unset($_SESSION['e_category_quote']);
-                            }
+                            // if (isset($_SESSION['e_category_quote'])) {
+                            //     echo $_SESSION['e_category_quote'];
+                            //     unset($_SESSION['e_category_quote']);
+                            // }
                             ?>
                         </h4>
                     </div>
@@ -326,7 +298,7 @@ if (isset($_POST['quote-text'])) {
                             ?>
                         </h4>
                         <p class="author-add">If you can't find the author, you can add him, but make sure that he hasn't already been added.</p>
-                        <a href="addauthor.php">Add author</a>
+                        <a href="#">Add author</a>
                     </div>
                     <div class="img-wrapper">
                         <div class="box-quote-img">

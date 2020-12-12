@@ -4,6 +4,30 @@ if (!isset($_SESSION['logged'])) {
     header('Location: index.php');
     exit();
 }
+
+require_once "connect.php";
+try {
+    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+    if ($link->connect_errno != 0) {
+        throw new Exception(mysqli_connect_errno());
+    } else {
+        $categories_id = $_GET['id_category'];
+        $result = $link->query("SELECT * FROM categories WHERE categories.id='$categories_id'");
+        if (!$result) {
+            throw new Exception($link->error);
+        }
+        $how_many = $result->num_rows;
+        if ($how_many > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $_SESSION['category-quote'] = $row['name'];
+            }
+        }
+        $link->close();
+    }
+} catch (Exception $e) {
+    echo "Server error! Sorry :/";
+    echo "<br/> Information for the developer: " . $e;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +36,9 @@ if (!isset($_SESSION['logged'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>ProjectQ12 | Home</title>
+    <title>
+        <?php echo "ProjectQ12 | Categories - " . $_SESSION['category-quote'] ?>
+    </title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
@@ -60,14 +86,50 @@ if (!isset($_SESSION['logged'])) {
         </div>
         <div class="nav-down">
             <div class="wrapper">
-                <a href="home.php" class="active">home</a>
+                <a href="home.php">home</a>
                 <!-- <a href="#">the latest</a> -->
-                <a href="category.php?id_category=1">love</a>
-                <a href="category.php?id_category=2">life</a>
-                <a href="category.php?id_category=3">woman</a>
-                <a href="category.php?id_category=4">man</a>
-                <a href="category.php?id_category=5">god</a>
-                <a href="category.php?id_category=6">sad</a>
+                <a href="category.php?id_category=1" class="
+                <?php
+                if ($categories_id == 1) {
+                    echo "active";
+                }
+                ?>
+                ">love</a>
+                <a href="category.php?id_category=2" class="
+                <?php
+                if ($categories_id == 2) {
+                    echo "active";
+                }
+                ?>
+                ">life</a>
+                <a href="category.php?id_category=3" class="
+                <?php
+                if ($categories_id == 3) {
+                    echo "active";
+                }
+                ?>
+                ">woman</a>
+                <a href="category.php?id_category=4" class="
+                <?php
+                if ($categories_id == 4) {
+                    echo "active";
+                }
+                ?>
+                ">man</a>
+                <a href="category.php?id_category=5" class="
+                <?php
+                if ($categories_id == 5) {
+                    echo "active";
+                }
+                ?>
+                ">god</a>
+                <a href="category.php?id_category=6" class="
+                <?php
+                if ($categories_id == 6) {
+                    echo "active";
+                }
+                ?>
+                ">sad</a>
                 <a href="#">Contact</a>
             </div>
         </div>
@@ -86,64 +148,95 @@ if (!isset($_SESSION['logged'])) {
     </div>
 
     <!-- Main section -->
-    <section id="home">
+    <section id="home-category">
         <div class="wrapper">
+            <h3 class="category">Category<span class="author gradient"> -
+                    <?php
+                    echo $_SESSION['category-quote'];
+                    ?>
+                </span>
+            </h3>
             <img src="img/logo.svg" />
-            <h3>„You only live once, but if you do it right, once is enough.”<span class="author gradient"> - Mae West</span></h3>
         </div>
     </section>
-    <section id="main-quote">
-        <div class="left-wrapper">
-            <div class="box">
-                <h3>Recently added quotes</h3>
-                <?php
-                require_once "connect.php";
+    <!-- Section category quotes -->
+    <section id="category-quotes">
+        <div class="wrapper">
+            <?php
+            require_once "connect.php";
+            try {
+                $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+                if ($link->connect_errno != 0) {
+                    throw new Exception(mysqli_connect_errno());
+                } else {
+                    $results_per_page = 5;
 
-                try {
-                    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
-                    if ($link->connect_errno != 0) {
-                        throw new Exception(mysqli_connect_errno());
+                    $result = $link->query("SELECT id FROM quotes WHERE categories_id='$categories_id'");
+                    $how_many_quote = $result->num_rows;
+
+                    $number_of_pages = ceil($how_many_quote / $results_per_page);
+
+                    if (!isset($_GET['page'])) {
+                        $page = 1;
                     } else {
-                        $result = $link->query("SELECT quotes.id, quotes.text_quote, quotes.creation_date, authors.name, authors.surname, users.user, categories.name AS 'category', categories.id AS 'category_id'  FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id INNER JOIN categories ON categories.id=quotes.categories_id ORDER BY quotes.creation_date DESC LIMIT 5");
-                        if (!$result) {
-                            throw new Exception($link->error);
-                        }
-                        $how_many_recent_quotes = $result->num_rows;
-                        if ($how_many_recent_quotes > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $date = $row['creation_date'];
-                                $convertdate = strtotime($date);
-                                $date = date('d-m-Y H:i', $convertdate);
-                                echo '<div class="quote-box">';
-                                echo '<div class="quote-box-info">';
-                                echo '<img src="img/logo-red.svg" />';
-                                echo '<div class="information">';
-                                echo '<a href="category.php?id_category=' . $row['category_id'] . '"><p class="category">' . $row['category'] . '</p></a>';
-                                echo '<p class="add-by">' . $row['user'] . '</p>';
-                                echo '<p class="creation-data">' . $date . '</p>';
-                                echo '</div>';
-                                echo '</div>';
-                                echo '<p>„' . $row['text_quote'] . '”<span> - <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></span></p>';
-                                echo '</div>';
-                            }
-                        }
-
-                        $link->close();
+                        $page = $_GET['page'];
                     }
-                } catch (Exception $e) {
-                    echo "Server error! Sorry :/";
-                    echo "<br/> Information for the developer: " . $e;
-                }
+                    $this_page_first_result = ($page - 1) * $results_per_page;
 
-                ?>
-            </div>
-        </div>
-        <div class="right-wrapper">
-            <div class="box">
-                <h3>Who we are?</h3>
-            </div>
+                    $result = $link->query("SELECT quotes.*, authors.*, categories.name AS 'name_category', users.* FROM quotes INNER JOIN categories ON quotes.categories_id=categories.id INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id WHERE quotes.categories_id='$categories_id' ORDER BY quotes.creation_date DESC LIMIT " . $this_page_first_result . ', ' . $results_per_page);
+                    if (!$result) {
+                        throw new Exception($link->error);
+                    }
+                    $how_many = $result->num_rows;
+                    if ($how_many > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<div class="box">';
+                            echo '<div class="img-box">';
+                            echo '<img src="' . $row['img_quote'] . '" />';
+                            echo '</div>';
+                            echo '<div class="background-box"></div>';
+                            echo '<div class="text-box">';
+                            if (strlen($row['text_quote']) < 50) {
+                                echo '<h2>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h2>';
+                            } else if (strlen($row['text_quote']) < 100) {
+                                echo '<h3>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h3>';
+                            } else if (strlen($row['text_quote']) < 225) {
+                                echo '<h4>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h4>';
+                            } else {
+                                echo '<h5>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h5>';
+                            }
+                            echo '</div>';
+                            echo '<div class="add-box">';
+                            echo '<span class="info">Added by: <a href="#">' . $row['user'] . '</a></span>';
+                            echo '<span class="info">Category: <a href=category.php?id_category=' . $categories_id . '>' . $row['name_category'] . '</a></span>';
+                            echo '<span class="info">Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></span>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                    }
+                    $link->close();
+                }
+            } catch (Exception $e) {
+                echo "Server error! Sorry :/";
+                echo "<br/> Information for the developer: " . $e;
+            }
+
+            ?>
         </div>
     </section>
+    <div id="pagination">
+        <?php
+        for ($page = 1; $page <= $number_of_pages; $page++) {
+            if ($number_of_pages != 1) {
+                echo '<div class="pagination-page"><a href="category.php?id_category=' . $categories_id . '&page=' . $page . '" class="';
+                if ($page == $_GET['page']) {
+                    echo "active";
+                }
+                echo '">' . $page . '</a></div>';
+            }
+        }
+        ?>
+    </div>
     <section id="authors">
         <div class="wrapper">
             <div class="box"></div>
@@ -162,7 +255,7 @@ if (!isset($_SESSION['logged'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=5 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=2 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -204,7 +297,7 @@ if (!isset($_SESSION['logged'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=4 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=1 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -234,6 +327,7 @@ if (!isset($_SESSION['logged'])) {
                 echo "Server error! Sorry :/";
                 echo "<br/> Information for the developer: " . $e;
             }
+
             ?>
         </div>
         <div class="quote-box">
@@ -245,7 +339,7 @@ if (!isset($_SESSION['logged'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=3 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -275,6 +369,7 @@ if (!isset($_SESSION['logged'])) {
                 echo "Server error! Sorry :/";
                 echo "<br/> Information for the developer: " . $e;
             }
+
             ?>
         </div>
     </section>
@@ -307,8 +402,7 @@ if (!isset($_SESSION['logged'])) {
         </a>
     </div>
     <script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll@15.0.0/dist/smooth-scroll.polyfills.min.js"></script>
-    <script src="js/home.js">
-    </script>
+    <script src="js/home.js"></script>
 </body>
 
 </html>
