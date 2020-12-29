@@ -134,7 +134,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                         $how_many_authors = $result->num_rows;
                         if ($how_many_authors > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo "<span><a href=''>" . $row['name'] . " " . $row['surname'] . "</a></span>";
+                                echo '<span><a href="author.php?id_author=' . $author_id . '">' . $row['name'] . " " . $row['surname'] . '</a></span>';
                             }
                         }
 
@@ -147,7 +147,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                         $how_many_categories = $result->num_rows;
                         if ($how_many_categories > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo "<p>Category: <a href=''>" . $row['name'] .  "</a></p>";
+                                echo "<p>Category: <a href='category.php?id_category=$category_id'>" . $row['name'] .  "</a></p>";
                             }
                         }
 
@@ -179,7 +179,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=5 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=5 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -191,7 +191,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -220,7 +220,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=4 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=4 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -232,7 +232,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -262,7 +262,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=3 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=3 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -274,7 +274,7 @@ if (isset($_SESSION['e_author_quote'])) unset($_SESSION['e_author_quote']);
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';

@@ -11,15 +11,43 @@ try {
     if ($link->connect_errno != 0) {
         throw new Exception(mysqli_connect_errno());
     } else {
-        $categories_id = $_GET['id_category'];
-        $result = $link->query("SELECT * FROM categories WHERE categories.id='$categories_id'");
+        $author_id = $_GET['id_author'];
+        $result = $link->query("SELECT * FROM authors WHERE authors.id='$author_id'");
         if (!$result) {
             throw new Exception($link->error);
         }
         $how_many = $result->num_rows;
         if ($how_many > 0) {
             while ($row = $result->fetch_assoc()) {
-                $_SESSION['category-quote'] = ucwords($row['name']);
+                $_SESSION['author_whole_name'] = ucwords($row['name'] . " " . $row['surname']);
+                $whole_name = $_SESSION['author_whole_name'];
+                $_SESSION['author_name'] = ucwords($row['name']);
+                $_SESSION['author_surname'] = ucwords($row['surname']);
+
+                $bornDateGood = $row['date_birth'];
+                $bornDate = $row['date_birth'];
+                $convertDate = strtotime($bornDate);
+                $bornDate = date('jS F, Y', $convertDate);
+                $_SESSION['author_date_born'] = $bornDate;
+
+                $deathDateGood = $row['date_death'];
+                $deathDate = $row['date_death'];
+                $convertDate = strtotime($deathDate);
+                $deathDate = date('jS F, Y', $convertDate);
+
+                $_SESSION['author_date_death'] = $deathDate;
+                $_SESSION['author_img'] = $row['img_author'];
+            }
+        }
+
+        $result = $link->query("SELECT COUNT(quotes.user_id) as 'quantity', CONCAT(COALESCE(authors.name,''),' ',COALESCE(authors.surname,'')) AS 'whole_name' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id GROUP BY authors.name HAVING whole_name='$whole_name'");
+        if (!$result) {
+            throw new Exception($link->error);
+        }
+        $how_many = $result->num_rows;
+        if ($how_many > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $_SESSION['quantity_of_quotes'] = $row['quantity'];
             }
         }
         $link->close();
@@ -37,7 +65,7 @@ try {
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>
-        <?php echo "ProjectQ12 | Category - " . $_SESSION['category-quote'] ?>
+        <?php echo "ProjectQ12 | Author - " . $_SESSION['author_whole_name'] ?>
     </title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -150,18 +178,39 @@ try {
     <!-- Main section -->
     <section id="home-category">
         <div class="wrapper">
-            <h3 class="category">Category<span class="author gradient"> -
+            <h3 class="category">Author<span class="author gradient"> -
                     <?php
-                    echo $_SESSION['category-quote'];
+                    echo $_SESSION['author_whole_name'];
                     ?>
                 </span>
             </h3>
             <img src="img/logo.svg" />
         </div>
     </section>
-
     <!-- Section category quotes -->
     <section id="category-quotes">
+        <div class="wrapper">
+            <div class="box-info">
+                <div class="box-left">
+                    <?php
+                    echo "<h3>Name: <span class='gradient'>" . $_SESSION['author_name'] . "</span></h3>";
+                    echo "<h3>Surname: <span class='gradient'>" . $_SESSION['author_surname'] . "</span></h3>";
+                    if (!empty($bornDateGood)) {
+                        echo "<h4>Date of born: <span class='gradient'>" . $_SESSION['author_date_born'] . "</span></h4>";
+                    }
+                    if (!empty($deathDateGood)) {
+                        echo "<h4>Date of death: <span class='gradient'>" . $_SESSION['author_date_death'] . "</span></h4>";
+                    }
+                    echo "<h3>Number of quotes on website:<span class='numbers'>" . $_SESSION['quantity_of_quotes'] . "</span></h3>";
+                    ?>
+                </div>
+                <div class="box-right">
+                    <?php
+                    echo '<img src="' . $_SESSION['author_img'] . '"/>';
+                    ?>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <?php
             require_once "connect.php";
@@ -170,9 +219,9 @@ try {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $results_per_page = 12;
+                    $results_per_page = 8;
 
-                    $result = $link->query("SELECT id FROM quotes WHERE categories_id='$categories_id'");
+                    $result = $link->query("SELECT id FROM quotes WHERE author_id='$author_id'");
                     $how_many_quote = $result->num_rows;
 
                     $number_of_pages = ceil($how_many_quote / $results_per_page);
@@ -184,7 +233,7 @@ try {
                     }
                     $this_page_first_result = ($page - 1) * $results_per_page;
 
-                    $result = $link->query("SELECT quotes.*, authors.*, authors.id AS 'author_id', categories.name AS 'name_category', users.* FROM quotes INNER JOIN categories ON quotes.categories_id=categories.id INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id WHERE quotes.categories_id='$categories_id' ORDER BY quotes.creation_date DESC LIMIT " . $this_page_first_result . ', ' . $results_per_page);
+                    $result = $link->query("SELECT quotes.*, authors.*, categories.name AS 'name_category', users.* FROM quotes INNER JOIN categories ON quotes.categories_id=categories.id INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id WHERE quotes.author_id='$author_id' ORDER BY quotes.creation_date DESC LIMIT " . $this_page_first_result . ', ' . $results_per_page);
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -209,7 +258,7 @@ try {
                             echo '</div>';
                             echo '<div class="add-box">';
                             echo '<span class="info">Added by: <a href="#">' . $row['user'] . '</a></span>';
-                            echo '<span class="info">Category: <a href=category.php?id_category=' . $categories_id . '>' . $row['name_category'] . '</a></span>';
+                            echo '<span class="info">Category: <a href=category.php?id_category=' . $author_id . '>' . $row['name_category'] . '</a></span>';
                             echo '<span class="info">Author: <a href=author.php?id_author=' . $row['author_id'] . '>' . $row['name'] . " " . $row['surname'] . '</a></span>';
                             echo '</div>';
                             echo '</div>';
@@ -221,7 +270,6 @@ try {
                 echo "Server error! Sorry :/";
                 echo "<br/> Information for the developer: " . $e;
             }
-
             ?>
         </div>
     </section>
@@ -230,7 +278,7 @@ try {
         echo '<div id="pagination">';
         for ($page = 1; $page <= $number_of_pages; $page++) {
             if ($number_of_pages != 1) {
-                echo '<div class="pagination-page"><a href="category.php?id_category=' . $categories_id . '&page=' . $page . '" class="';
+                echo '<div class="pagination-page"><a href="author.php?id_author=' . $author_id . '&page=' . $page . '" class="';
                 if ($page == $_GET['page']) {
                     echo "active";
                 }
@@ -342,7 +390,7 @@ try {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }

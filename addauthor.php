@@ -5,51 +5,58 @@ if (!isset($_SESSION['logged'])) {
     exit();
 }
 
-if (isset($_POST['quote-text'])) {
+if (isset($_POST['name-of-author'])) {
     // Validation
-    $quote_OK = true;
+    $author_OK = true;
 
-    // Checking text of quote
-    $text_quote = $_POST['quote-text'];
-    if (strlen($text_quote) <= 8 || (strlen($text_quote) >= 512)) {
-        $quote_OK = false;
-        $_SESSION['e_quote_text'] = "The text of the quote cannot be less than 8 and more than 512 characters long";
+    // Checking name of author
+    $name_of_author = trim($_POST['name-of-author']);
+    if (strlen($name_of_author) < 3 || (strlen($name_of_author) >= 20)) {
+        $author_OK = false;
+        $_SESSION['e_author_name'] = "The name cannot be less than 3 or more than 20 characters";
     }
 
-    // Checking category of quote 
-    if (!isset($_POST['select-category'])) {
-        $quote_OK = false;
-        $_SESSION['e_category_quote'] = "You have not selected a category";
+    if (!ctype_alpha($name_of_author)) {
+        $author_OK = false;
+        $_SESSION['e_author_name'] = "The name can only consist of letters";
     }
 
-    // Checking author of quote 
-    if (!isset($_POST['select-author'])) {
-        $quote_OK = false;
-        $_SESSION['e_author_quote'] = "You didn't choose an author";
+    // Checking surname of author
+    $surname_of_author = trim($_POST['surname-of-author']);
+    if (strlen($surname_of_author) < 3 || (strlen($surname_of_author) >= 30)) {
+        $author_OK = false;
+        $_SESSION['e_author_surname'] = "Surname can not be less than 3 or more than 30 characters";
     }
 
-    // Checking img of quote
-    if (empty($_FILES['img-quote']['name'])) {
-        $quote_OK = false;
-        $_SESSION['e_img_quote'] = "You didn't select a photo";
-    } else if ($_FILES['img-quote']['size'] > 2097152) {
-        $quote_OK = false;
-        $_SESSION['e_img_quote'] = "The size of the photo is greater than 2 MB. Please choose another photo smaller than 2MB";
+    if (!ctype_alpha($surname_of_author)) {
+        $author_OK = false;
+        $_SESSION['e_author_surname'] = "The name can only consist of letters";
+    }
+
+
+    // Checking exsit of img author
+    if (empty($_FILES['img-of-author']['name'])) {
+        $author_OK = false;
+        $_SESSION['e_img_of_author'] = "You didn't select a photo";
+    } else if ($_FILES['img-of-author']['size'] > 2097152) {
+        $author_OK = false;
+        $_SESSION['e_img_of_author'] = "The size of the photo is greater than 2 MB. Please choose another photo smaller than 2MB";
     }
 
     // Checking extension of file
-    if ($_FILES['img-quote']['name']) {
+    if ($_FILES['img-of-author']['name']) {
         $allowed = array('gif', 'png', 'jpg', 'jpeg');
-        $filename = $_FILES['img-quote']['name'];
+        $filename = $_FILES['img-of-author']['name'];
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         if (!in_array($ext, $allowed)) {
-            $quote_OK = false;
-            $_SESSION['e_img_quote'] = "The selected file extension is not allowed on this site. Allowed extensions are jpg, jpeg, png and gif";
+            $author_OK = false;
+            $_SESSION['e_img_of_author'] = "The selected file extension is not allowed on this site. Allowed extensions are jpg, jpeg, png and gif";
         }
     }
 
-    //Remember data
-    $_SESSION['fr_quote_text'] = $text_quote;
+    // Remember data
+    $_SESSION['fr_author_name'] = $name_of_author;
+    $_SESSION['fr_author_surname'] = $surname_of_author;
 
     require_once "connect.php";
     try {
@@ -58,35 +65,35 @@ if (isset($_POST['quote-text'])) {
             throw new Exception(mysqli_connect_errno());
         } else {
 
-            // Check text_quote
-            $text_quote_converted = htmlentities($text_quote, ENT_QUOTES);
+            $name_of_author = htmlentities($name_of_author, ENT_QUOTES, "utf-8");
+            $surname_of_author = htmlentities($surname_of_author, ENT_QUOTES, "utf-8");
 
-            // Quote exist
-            $result = $link->query("SELECT id FROM quotes WHERE text_quote='$text_quote_converted'");
+            // Author exist
+            $result = $link->query("SELECT CONCAT(COALESCE(name,''),' ',COALESCE(surname,'')) AS whole_name FROM authors WHERE name='$name_of_author' AND surname='$surname_of_author'");
             if (!$result) {
                 throw new Exception($link->error);
             }
-            $how_many_quotes = $result->num_rows;
-            if ($how_many_quotes > 0) {
-                $quote_OK = false;
-                $_SESSION['e_quote_text'] = "The quote already exists in our database";
+            $how_many_author = $result->num_rows;
+            if ($how_many_author > 0) {
+                $author_OK = false;
+                $_SESSION['e_author_name'] = "The author already exists in our database";
             }
 
-            // Img exist
-            $path_quote_img = "img/quotes/" . $_SESSION['login'] . "/" . $_FILES['img-quote']['name'];
-            $result = $link->query("SELECT id FROM quotes WHERE img_quote='$path_quote_img'");
+            // Img author exist
+            $path_author_img = "img/authors/" . $_SESSION['login'] . "/" . $_FILES['img-of-author']['name'];
+            $result = $link->query("SELECT id FROM authors WHERE img_author='$path_author_img'");
             if (!$result) {
                 throw new Exception($link->error);
             }
             $how_many_img = $result->num_rows;
             if ($how_many_img > 0) {
-                $quote_OK = false;
-                $_SESSION['e_img_quote'] = "The name of the photo you selected already exists in our database. Make sure you don't want to add the same photo or rename the photo";
+                $author_OK = false;
+                $_SESSION['e_img_of_author'] = "The name of the photo you selected already exists in our database. Make sure you don't want to add the same photo or rename the photo";
             }
 
-            if ($quote_OK == true) {
-                $author_id = $_POST['select-author'];
-                $category_id = $_POST['select-category'];
+            if ($author_OK == true) {
+                // $author_id = $_POST['select-author'];
+                // $category_id = $_POST['select-category'];
                 $login = $_SESSION['login'];
                 if ($result = $link->query("SELECT * FROM users WHERE user='$login'")) {
                     $row = $result->num_rows;
@@ -97,23 +104,43 @@ if (isset($_POST['quote-text'])) {
                     }
                 }
 
-                // Adding img of quote
-                $image = $_FILES['img-quote']['name'];
-                if (!is_dir("img/quotes/$login")) {
-                    mkdir("img/quotes/$login", 0777);
+                // Adding img of author
+                $image = $_FILES['img-of-author']['name'];
+                if (!is_dir("img/authors/$login")) {
+                    mkdir("img/authors/$login", 0777);
                 }
-                $target = "img/quotes/" . $login . "/" . basename($image);
-                $link->query("INSERT INTO quotes (img_quote) VALUES ('$target')");
-                move_uploaded_file($_FILES['img-quote']['tmp_name'], $target);
+                $target = "img/authors/" . $login . "/" . basename($image);
+                move_uploaded_file($_FILES['img-of-author']['tmp_name'], $target);
 
-                $img_quote = $target;
 
-                if ($link->query("INSERT INTO quotes(text_quote, author_id, user_id, categories_id, img_quote) VALUES('$text_quote_converted', '$author_id', '$login_id', '$category_id', '$img_quote')")) {
-                    $_SESSION['successful_quote_add'] = true;
-                    $_SESSION['text_quote'] = $text_quote_converted;
-                    $_SESSION['author_of_quote'] = $author_id;
-                    $_SESSION['category_quote'] = $category_id;
-                    header('Location: quoteadded.php');
+                // Checking dates
+                if (isset($_POST['born-date'])) {
+                    $bornDate = $_POST['born-date'];
+                    $convertDate = strtotime($bornDate);
+                    $bornDate = date('Y-m-d', $convertDate);
+                    $bornDateChar = "'$bornDate'";
+                } else {
+                    $bornDateChar = "NULL";
+                }
+
+                if (isset($_POST['death-date'])) {
+                    $deathDate = $_POST['death-date'];
+                    $convertDate = strtotime($deathDate);
+                    $deathDate = date('Y-m-d', $convertDate);
+                    $deathDateChar = "'$deathDate'";
+                } else {
+                    $deathDateChar = "NULL";
+                }
+
+                // Adding to database author
+                if ($link->query("INSERT INTO authors(name, surname, date_birth, date_death, img_author) VALUES('$name_of_author', '$surname_of_author', $bornDateChar, $deathDateChar, '$target')")) {
+                    $_SESSION['successful_author_add'] = true;
+                    $_SESSION['name_author'] = $name_of_author;
+                    $_SESSION['surname_author'] = $surname_of_author;
+                    $_SESSION['born_date'] = $_POST['born-date'];
+                    $_SESSION['death_date'] = $_POST['death-date'];
+                    $_SESSION['img_author'] = $target;
+                    header('Location: authoradded.php');
                 } else {
                     throw new Exception($link->error);
                 }
@@ -140,10 +167,13 @@ if (isset($_POST['quote-text'])) {
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link rel="Shortcut icon" href="img/logo.svg" />
+    <link rel="stylesheet" href="css/datedropper.css" />
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="dist/select.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="dist/select.min.js"></script>
+    <script type="text/javascript" src="js/datedropper.js"></script>
 </head>
 
 <body>
@@ -199,7 +229,7 @@ if (isset($_POST['quote-text'])) {
 
     <div id="video">
         <video id="videoBG" autoplay muted loop>
-            <source src="video/bgvideo3.mp4" type="video/mp4">
+            <source src="video/bgvideo.mp4" type="video/mp4">
         </video>
         <div id="quotation">
             <h3>Quote of the day</h3>
@@ -226,99 +256,103 @@ if (isset($_POST['quote-text'])) {
             <div class="box">
                 <h3>Here you can add an author <img src="img/logo-red.svg" /></h3>
                 <form method="POST" enctype="multipart/form-data">
-                    <p><img src="img/logo.svg" /></p>
-                    <div class="quote-box">
-                        <textarea name="quote-text" maxlength="512" placeholder="Text of the quote" required><?php if (isset($_SESSION['fr_quote_text'])) {
-                                                                                                                    echo $_SESSION['fr_quote_text'];
-                                                                                                                    unset($_SESSION['fr_quote_text']);
-                                                                                                                } ?></textarea>
-                        <label for="quote-text" class="label-text"></label>
-                    </div>
-                    <p><img src="img/logo.svg" /></p>
-                    <h4 class="e-quote-text">
-                        <?php
-                        if (isset($_SESSION['e_quote_text'])) {
-                            echo $_SESSION['e_quote_text'];
-                            unset($_SESSION['e_quote_text']);
-                        }
-                        ?>
-                    </h4>
+
+                    <!-- Name of author -->
                     <div class="wrapper-name-author">
                         <div class="box-name-author">
-
+                            <input type="text" name="name-of-author" placeholder="Name of author" value="<?php
+                                                                                                            if (isset($_SESSION['fr_author_name'])) {
+                                                                                                                echo $_SESSION['fr_author_name'];
+                                                                                                                unset($_SESSION['fr_author_name']);
+                                                                                                            }
+                                                                                                            ?>" required />
+                            <label for="name-of-author"></label>
                         </div>
-                        <h4>
-                            <?php
-                            // if (isset($_SESSION['e_category_quote'])) {
-                            //     echo $_SESSION['e_category_quote'];
-                            //     unset($_SESSION['e_category_quote']);
-                            // }
-                            ?>
-                        </h4>
+                        <?php
+                        if (isset($_SESSION['e_author_name'])) {
+                            echo "<h4>";
+                            echo $_SESSION['e_author_name'];
+                            unset($_SESSION['e_author_name']);
+                            echo "</h4>";
+                        }
+                        ?>
                     </div>
-                    <div class="author-wrapper">
-                        <div class="box-author">
-                            <span>Author of the quote: </span>
-                            <select name="select-author" id="author-id">
-                                <option value="" disabled selected hidden>Enter the author</option>
-                                <?php
-                                require_once "connect.php";
 
-                                try {
-                                    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
-                                    if ($link->connect_errno != 0) {
-                                        throw new Exception(mysqli_connect_errno());
-                                    } else {
-                                        $result = $link->query("SELECT * FROM authors ORDER BY name");
-                                        if (!$result) {
-                                            throw new Exception($link->error);
-                                        }
-                                        $how_many_authors = $result->num_rows;
-                                        if ($how_many_authors > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<option value=" . $row['id'] . ">" . $row['name'] . " " . $row['surname'] . "</option>";
-                                            }
-                                        }
-
-                                        $link->close();
-                                    }
-                                } catch (Exception $e) {
-                                    echo "Server error! Sorry :/";
-                                    echo "<br/> Information for the developer: " . $e;
-                                }
-                                ?>
-                            </select>
+                    <!-- Surname of author -->
+                    <div class="wrapper-surname-author">
+                        <div class="box-surname-author">
+                            <input type="text" name="surname-of-author" placeholder="Surname of author" value="<?php
+                                                                                                                if (isset($_SESSION['fr_author_surname'])) {
+                                                                                                                    echo $_SESSION['fr_author_surname'];
+                                                                                                                    unset($_SESSION['fr_author_surname']);
+                                                                                                                }
+                                                                                                                ?>" required />
+                            <label for="surname-of-author"></label>
                         </div>
-                        <h4>
-                            <?php
-                            if (isset($_SESSION['e_author_quote'])) {
-                                echo $_SESSION['e_author_quote'];
-                                unset($_SESSION['e_author_quote']);
-                            }
-                            ?>
-                        </h4>
-                        <p class="author-add">If you can't find the author, you can add him, but make sure that he hasn't already been added.</p>
-                        <a href="#">Add author</a>
+                        <?php
+                        if (isset($_SESSION['e_author_surname'])) {
+                            echo "<h4>";
+                            echo $_SESSION['e_author_surname'];
+                            unset($_SESSION['e_author_surname']);
+                            echo "</h4>";
+                        }
+                        ?>
                     </div>
-                    <div class="img-wrapper">
-                        <div class="box-quote-img">
+
+                    <!-- Add born-date -->
+                    <div class="wrapper-button">
+                        <div class="box-button">
+                            <button id="add-date-born">Add born date</button>
+                        </div>
+                    </div>
+
+                    <!-- Add author born-date -->
+                    <div class="wrapper-born-date" id="date-born-wrapper">
+                        <div class="box-born-date">
+                            <span>Date of born: </span>
+                            <div class="center-input">
+                                <input type="text" id="date-born" name="born-date" data-default-date="01-01-1970" data-large-mode="true" data-min-year="1000" data-format="S F, Y" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add death-date -->
+                    <div class="wrapper-button">
+                        <div class="box-button">
+                            <button id="add-date-death">Add death date</button>
+                        </div>
+                    </div>
+
+                    <!-- Add author death-date -->
+                    <div class="wrapper-death-date" id="date-death-wrapper">
+                        <div class="box-death-date">
+                            <span>Date of death: </span>
+                            <div class="center-input">
+                                <input type="text" id="date-death" name="death-date" data-default-date="01-01-2000" data-large-mode="true" data-min-year="1000" data-format="S F, Y" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Img of author -->
+                    <div class="wrapper-img-author">
+                        <div class="box-img-author">
                             <span>Img of the quote: </span>
-                            <input type="file" name="img-quote" id="img-quote" accept="image/png, image/jpeg" />
-                            <label for="img-quote">
+                            <input type="file" id="img-author" name="img-of-author" accept="image/png, image/jpeg" />
+                            <label for="img-author">
                                 <span id="text-img-quote">Choose The Img</span>
                                 <i class="fas fa-cloud-upload-alt"></i>
                             </label>
                         </div>
-                        <h4 id="error-img">
+                        <h4 id='error-img'>
                             <?php
-                            if (isset($_SESSION['e_img_quote'])) {
-                                echo $_SESSION['e_img_quote'];
-                                unset($_SESSION['e_img_quote']);
+                            if (isset($_SESSION['e_img_of_author'])) {
+                                echo $_SESSION['e_img_of_author'];
+                                unset($_SESSION['e_img_of_author']);
                             }
                             ?>
                         </h4>
                     </div>
-                    <input type="submit" value="Add quote" name="add-quote" />
+                    <input type="submit" value="Add author" name="add-author" />
                 </form>
             </div>
         </div>
@@ -333,7 +367,7 @@ if (isset($_POST['quote-text'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=2 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=2 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -345,7 +379,7 @@ if (isset($_POST['quote-text'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -375,7 +409,7 @@ if (isset($_POST['quote-text'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=1 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=1 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -387,7 +421,7 @@ if (isset($_POST['quote-text'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -417,7 +451,7 @@ if (isset($_POST['quote-text'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -429,7 +463,7 @@ if (isset($_POST['quote-text'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -480,25 +514,8 @@ if (isset($_POST['quote-text'])) {
     <script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll@15.0.0/dist/smooth-scroll.polyfills.min.js"></script>
     <script src="js/home.js"></script>
     <script>
-        // Category
-        var mySelect = new Select('#category-id', {
-            // auto show the live filter
-            filtered: 'auto',
-            // auto show the live filter when the options >= 8
-            filter_threshold: 5,
-            // custom placeholder
-            filter_placeholder: 'Enter The Category'
-        });
-        // Author
-        var mySelect = new Select('#author-id', {
-            filtered: 'auto',
-            filter_threshold: 5,
-            filter_placeholder: 'Enter The Author'
-
-        });
-
         // IMG QUOTE ADD
-        const imgInput = document.querySelector("#img-quote");
+        const imgInput = document.querySelector("#img-author");
         imgInput.addEventListener("change", function() {
             let errorSize = document.querySelector("#error-img");
             const imgText = document.querySelector("#text-img-quote");
@@ -516,6 +533,46 @@ if (isset($_POST['quote-text'])) {
                 } else {
                     errorSize.textContent = ``;
                 }
+            }
+        })
+    </script>
+    <script>
+        $('#date-born').dateDropper();
+        $('#date-death').dateDropper();
+    </script>
+
+    <!-- Date -->
+    <script>
+        // Hide elements
+        $('#date-born-wrapper').hide();
+        $('#date-death-wrapper').hide();
+        $('#add-date-death').hide();
+
+        $('#add-date-born').click(function(event) {
+            event.preventDefault();
+            $('#date-born-wrapper').slideToggle("slow", function() {})
+            if ($('#add-date-born').html() == "Add born date") {
+                $('#add-date-born').html('Remove born date');
+                $('#date-born').attr("disabled", false);
+            } else {
+                $('#add-date-born').html('Add born date');
+                $('#date-death-wrapper').slideUp();
+                $('#date-born').attr("disabled", true);
+            }
+            $('#add-date-death').html('Add death date');
+            $('#add-date-death').slideToggle();
+            $('#date-death').attr("disabled", true);
+        })
+
+        $('#add-date-death').click(function(event) {
+            event.preventDefault();
+            $('#date-death-wrapper').slideToggle("slow", function() {})
+            if ($('#add-date-death').html() == "Add death date") {
+                $('#add-date-death').html('Remove death date');
+                $('#date-death').attr("disabled", false);
+            } else {
+                $('#add-date-death').html('Add death date');
+                $('#date-death').attr("disabled", true);
             }
         })
     </script>

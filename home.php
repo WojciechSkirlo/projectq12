@@ -104,7 +104,7 @@ if (!isset($_SESSION['logged'])) {
                     if ($link->connect_errno != 0) {
                         throw new Exception(mysqli_connect_errno());
                     } else {
-                        $result = $link->query("SELECT quotes.id, quotes.text_quote, quotes.creation_date, authors.name, authors.surname, users.user, categories.name AS 'category', categories.id AS 'category_id'  FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id INNER JOIN categories ON categories.id=quotes.categories_id ORDER BY quotes.creation_date DESC LIMIT 5");
+                        $result = $link->query("SELECT quotes.id, quotes.text_quote, quotes.creation_date, authors.id AS 'author_id', authors.name, authors.surname, users.user, categories.name AS 'category', categories.id AS 'category_id'  FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id INNER JOIN categories ON categories.id=quotes.categories_id ORDER BY quotes.creation_date DESC LIMIT 5");
                         if (!$result) {
                             throw new Exception($link->error);
                         }
@@ -123,7 +123,7 @@ if (!isset($_SESSION['logged'])) {
                                 echo '<p class="creation-data">' . $date . '</p>';
                                 echo '</div>';
                                 echo '</div>';
-                                echo '<p>„' . $row['text_quote'] . '”<span> - <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></span></p>';
+                                echo '<p>„' . $row['text_quote'] . '”<span> - <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></span></p>';
                                 echo '</div>';
                             }
                         }
@@ -162,7 +162,7 @@ if (!isset($_SESSION['logged'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=5 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=5 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -174,7 +174,7 @@ if (!isset($_SESSION['logged'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -204,7 +204,7 @@ if (!isset($_SESSION['logged'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=4 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=4 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -216,7 +216,7 @@ if (!isset($_SESSION['logged'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -245,7 +245,7 @@ if (!isset($_SESSION['logged'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=3 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=3 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -257,7 +257,7 @@ if (!isset($_SESSION['logged'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -282,21 +282,30 @@ if (!isset($_SESSION['logged'])) {
         <div class="wrapper">
             <div class="up">
                 <div class="box">
-                    <a href="#">
+                    <a href="home.php">
                         <div class="logo">
                             <img src="img/logo.svg" />
                         </div>
                     </a>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in tristique nulla. Suspendisse mattis, dolor ut luctus convallis, arcu nibh vulputate risus, in sagittis risus erat ac sem.</p>
+                    <div class="social-wrapper">
+                        <a href="" target="_blank">
+                            <div class="social-box"></div>
+                        </a>
+                        <a href="" target="_blank">
+                            <div class="social-box"></div>
+                        </a>
+                        <a href="" target="_blank">
+                            <div class="social-box"></div>
+                        </a>
+                    </div>
                 </div>
                 <div class="box">
                     <p></p>
                 </div>
                 <div class="box"></div>
-                <div class="box"></div>
             </div>
             <div class="down">
-                <p>All right reserved.</p>
+                <p>All right reserved by <a href="home.php">ProjectQ12</a></p>
                 <p>Created by: <a href="http://woytek-portfolio.pl/" target="_blank">Woytek</a></p>
             </div>
         </div>

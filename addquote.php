@@ -10,7 +10,7 @@ if (isset($_POST['quote-text'])) {
     $quote_OK = true;
 
     // Checking text of quote
-    $text_quote = $_POST['quote-text'];
+    $text_quote = trim($_POST['quote-text']);
     if (strlen($text_quote) <= 8 || (strlen($text_quote) >= 512)) {
         $quote_OK = false;
         $_SESSION['e_quote_text'] = "The text of the quote cannot be less than 8 and more than 512 characters long";
@@ -103,7 +103,7 @@ if (isset($_POST['quote-text'])) {
                     mkdir("img/quotes/$login", 0777);
                 }
                 $target = "img/quotes/" . $login . "/" . basename($image);
-                $link->query("INSERT INTO quotes (img_quote) VALUES ('$target')");
+                // $link->query("INSERT INTO quotes (img_quote) VALUES ('$target')");
                 move_uploaded_file($_FILES['img-quote']['tmp_name'], $target);
 
                 $img_quote = $target;
@@ -361,7 +361,7 @@ if (isset($_POST['quote-text'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=2 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=2 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -373,7 +373,7 @@ if (isset($_POST['quote-text'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -403,7 +403,7 @@ if (isset($_POST['quote-text'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=1 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=1 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -415,7 +415,7 @@ if (isset($_POST['quote-text'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';
@@ -445,7 +445,7 @@ if (isset($_POST['quote-text'])) {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -457,7 +457,7 @@ if (isset($_POST['quote-text'])) {
                             echo '<div class="text">';
                             echo '<div class="category">';
                             echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="#">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
                             echo '</div>';
                             if (strlen($row['text_quote']) > 400) {
                                 echo '<h4>„' . $row['text_quote'] . '”</h4>';

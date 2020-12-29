@@ -1,33 +1,21 @@
 <?php
 session_start();
-if (!isset($_SESSION['logged'])) {
+if (!isset($_SESSION['logged']) || (!isset($_SESSION['successful_author_add']))) {
     header('Location: index.php');
     exit();
+} else {
+    unset($_SESSION['successful_author_add']);
 }
 
-require_once "connect.php";
-try {
-    $link = new mysqli($db_server, $db_login, $db_password, $db_name);
-    if ($link->connect_errno != 0) {
-        throw new Exception(mysqli_connect_errno());
-    } else {
-        $categories_id = $_GET['id_category'];
-        $result = $link->query("SELECT * FROM categories WHERE categories.id='$categories_id'");
-        if (!$result) {
-            throw new Exception($link->error);
-        }
-        $how_many = $result->num_rows;
-        if ($how_many > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $_SESSION['category-quote'] = ucwords($row['name']);
-            }
-        }
-        $link->close();
-    }
-} catch (Exception $e) {
-    echo "Server error! Sorry :/";
-    echo "<br/> Information for the developer: " . $e;
-}
+//Delete variables from form add_quote
+if (isset($_SESSION['fr_author_name'])) unset($_SESSION['fr_author_name']);
+if (isset($_SESSION['fr_author_surname'])) unset($_SESSION['fr_author_surname']);
+
+//Delete error from add_quote
+if (isset($_SESSION['e_author_name'])) unset($_SESSION['e_author_name']);
+if (isset($_SESSION['e_author_surname'])) unset($_SESSION['e_author_surname']);
+if (isset($_SESSION['e_img_of_author'])) unset($_SESSION['e_img_of_author']);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,9 +24,7 @@ try {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>
-        <?php echo "ProjectQ12 | Category - " . $_SESSION['category-quote'] ?>
-    </title>
+    <title>ProjectQ12 | The author has been added</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
@@ -70,6 +56,7 @@ try {
             <div class="login">
                 <div class="login-info">
                     <?php
+                    $login = $_SESSION['login'];
                     echo '<div class="text-info">';
                     echo "<p><b>Login:</b> " . $_SESSION['login'] . "</p>";
                     echo "<p><b>E-mail:</b> " . $_SESSION['email'] . "</p>";
@@ -88,48 +75,12 @@ try {
             <div class="wrapper">
                 <a href="home.php">home</a>
                 <!-- <a href="#">the latest</a> -->
-                <a href="category.php?id_category=1" class="
-                <?php
-                if ($categories_id == 1) {
-                    echo "active";
-                }
-                ?>
-                ">love</a>
-                <a href="category.php?id_category=2" class="
-                <?php
-                if ($categories_id == 2) {
-                    echo "active";
-                }
-                ?>
-                ">life</a>
-                <a href="category.php?id_category=3" class="
-                <?php
-                if ($categories_id == 3) {
-                    echo "active";
-                }
-                ?>
-                ">woman</a>
-                <a href="category.php?id_category=4" class="
-                <?php
-                if ($categories_id == 4) {
-                    echo "active";
-                }
-                ?>
-                ">man</a>
-                <a href="category.php?id_category=5" class="
-                <?php
-                if ($categories_id == 5) {
-                    echo "active";
-                }
-                ?>
-                ">god</a>
-                <a href="category.php?id_category=6" class="
-                <?php
-                if ($categories_id == 6) {
-                    echo "active";
-                }
-                ?>
-                ">sad</a>
+                <a href="category.php?id_category=1">love</a>
+                <a href="category.php?id_category=2">life</a>
+                <a href="category.php?id_category=3">woman</a>
+                <a href="category.php?id_category=4">man</a>
+                <a href="category.php?id_category=5">god</a>
+                <a href="category.php?id_category=6">sad</a>
                 <a href="#">Contact</a>
             </div>
         </div>
@@ -148,104 +99,50 @@ try {
     </div>
 
     <!-- Main section -->
-    <section id="home-category">
+    <section id="home">
         <div class="wrapper">
-            <h3 class="category">Category<span class="author gradient"> -
-                    <?php
-                    echo $_SESSION['category-quote'];
-                    ?>
-                </span>
-            </h3>
             <img src="img/logo.svg" />
+            <h3>„The secret of change is to focus all of your energy not on fighting the old, but on building the new”<span class="author gradient"> - Socrates</span></h3>
         </div>
     </section>
-
-    <!-- Section category quotes -->
-    <section id="category-quotes">
-        <div class="wrapper">
-            <?php
-            require_once "connect.php";
-            try {
-                $link = new mysqli($db_server, $db_login, $db_password, $db_name);
-                if ($link->connect_errno != 0) {
-                    throw new Exception(mysqli_connect_errno());
-                } else {
-                    $results_per_page = 12;
-
-                    $result = $link->query("SELECT id FROM quotes WHERE categories_id='$categories_id'");
-                    $how_many_quote = $result->num_rows;
-
-                    $number_of_pages = ceil($how_many_quote / $results_per_page);
-
-                    if (!isset($_GET['page'])) {
-                        $page = 1;
-                    } else {
-                        $page = $_GET['page'];
-                    }
-                    $this_page_first_result = ($page - 1) * $results_per_page;
-
-                    $result = $link->query("SELECT quotes.*, authors.*, authors.id AS 'author_id', categories.name AS 'name_category', users.* FROM quotes INNER JOIN categories ON quotes.categories_id=categories.id INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id WHERE quotes.categories_id='$categories_id' ORDER BY quotes.creation_date DESC LIMIT " . $this_page_first_result . ', ' . $results_per_page);
-                    if (!$result) {
-                        throw new Exception($link->error);
-                    }
-                    $how_many = $result->num_rows;
-                    if ($how_many > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<div class="box">';
-                            echo '<div class="img-box">';
-                            echo '<img src="' . $row['img_quote'] . '" />';
-                            echo '</div>';
-                            echo '<div class="background-box"></div>';
-                            echo '<div class="text-box">';
-                            if (strlen($row['text_quote']) < 50) {
-                                echo '<h2>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h2>';
-                            } else if (strlen($row['text_quote']) < 100) {
-                                echo '<h3>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h3>';
-                            } else if (strlen($row['text_quote']) < 225) {
-                                echo '<h4>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h4>';
-                            } else {
-                                echo '<h5>„' . $row['text_quote'] . '” - <span class="gradient">' . $row['name'] . " " . $row['surname'] . '<span></h5>';
-                            }
-                            echo '</div>';
-                            echo '<div class="add-box">';
-                            echo '<span class="info">Added by: <a href="#">' . $row['user'] . '</a></span>';
-                            echo '<span class="info">Category: <a href=category.php?id_category=' . $categories_id . '>' . $row['name_category'] . '</a></span>';
-                            echo '<span class="info">Author: <a href=author.php?id_author=' . $row['author_id'] . '>' . $row['name'] . " " . $row['surname'] . '</a></span>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    }
-                    $link->close();
-                }
-            } catch (Exception $e) {
-                echo "Server error! Sorry :/";
-                echo "<br/> Information for the developer: " . $e;
-            }
-
-            ?>
+    <section id="addquote">
+        <div class="left-wrapper">
+            <div class="box">
+                <h3>Rules</h3>
+            </div>
         </div>
-    </section>
-    <?php
-    if ($number_of_pages > 1) {
-        echo '<div id="pagination">';
-        for ($page = 1; $page <= $number_of_pages; $page++) {
-            if ($number_of_pages != 1) {
-                echo '<div class="pagination-page"><a href="category.php?id_category=' . $categories_id . '&page=' . $page . '" class="';
-                if ($page == $_GET['page']) {
-                    echo "active";
+        <div class="right-wrapper">
+            <div class="box">
+                <h3>Hurrah.. The author has been added <img src="img/logo-red.svg" /></h3>
+                <?php
+                echo "<div class='wrapper-added'>";
+                echo "<div class='wrapper-added-left'>";
+                echo "<h4 class=''>New Author: </h4>";
+                echo "<h4 class='author-name'><span class='gradient'>" . $_SESSION['name_author'] . " " . $_SESSION['surname_author'] . "</span></h4>";
+                if ($_SESSION['born_date'] != NULL) {
+                    echo "<h5 class='author-date'>Date of birth: " . $_SESSION['born_date'] . "</h5>";
+                    if ($_SESSION['death_date'] != NULL) {
+                        echo "<h5 class='author-date'>Date of death: " . $_SESSION['death_date'] . "</h5>";
+                    }
                 }
-                echo '">' . $page . '</a></div>';
-            }
-        }
-        echo '</div>';
-    }
-    ?>
-    <section id="authors">
-        <div class="wrapper">
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
+                echo "</div>";
+                echo "<div class='wrapper-added-right'>";
+                echo "<img src='" . $_SESSION['img_author'] . "'/>";
+                echo "</div>";
+                echo "</div>";
+                ?>
+                <div class="wrapper-btn">
+                    <a href="addquote.php">
+                        <h4>Add quote</h4>
+                    </a>
+                    <a href="addauthor.php">
+                        <h4>Add another author</h4>
+                    </a>
+                    <a href="home.php">
+                        <h4>Go to homepage</h4>
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
     <section id="quote-img">
@@ -258,7 +155,48 @@ try {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=2 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=5 ORDER BY RAND() LIMIT 1");
+                    if (!$result) {
+                        throw new Exception($link->error);
+                    }
+                    $how_many_rand_quotes = $result->num_rows;
+                    if ($how_many_rand_quotes > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<img src="' . $row['img_quote'] . '" />';
+                            echo '<div class="background">';
+                            echo '<div class="text">';
+                            echo '<div class="category">';
+                            echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
+                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
+                            echo '</div>';
+                            if (strlen($row['text_quote']) > 400) {
+                                echo '<h4>„' . $row['text_quote'] . '”</h4>';
+                            } else {
+                                echo '<h3>„' . $row['text_quote'] . '”</h3>';
+                            }
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                    }
+
+                    $link->close();
+                }
+            } catch (Exception $e) {
+                echo "Server error! Sorry :/";
+                echo "<br/> Information for the developer: " . $e;
+            }
+            ?>
+        </div>
+        <div class="quote-box">
+            <?php
+            require_once "connect.php";
+
+            try {
+                $link = new mysqli($db_server, $db_login, $db_password, $db_name);
+                if ($link->connect_errno != 0) {
+                    throw new Exception(mysqli_connect_errno());
+                } else {
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=4 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -300,49 +238,7 @@ try {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=1 ORDER BY RAND() LIMIT 1");
-                    if (!$result) {
-                        throw new Exception($link->error);
-                    }
-                    $how_many_rand_quotes = $result->num_rows;
-                    if ($how_many_rand_quotes > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<img src="' . $row['img_quote'] . '" />';
-                            echo '<div class="background">';
-                            echo '<div class="text">';
-                            echo '<div class="category">';
-                            echo '<h3>Category: <a href="category.php?id_category=' . $row['categories_id'] . '">' . $row['category_name'] . '</a></h3>';
-                            echo '<h3>Author: <a href="author.php?id_author=' . $row['author_id'] . '">' . $row['name'] . " " . $row['surname'] . '</a></h3>';
-                            echo '</div>';
-                            if (strlen($row['text_quote']) > 400) {
-                                echo '<h4>„' . $row['text_quote'] . '”</h4>';
-                            } else {
-                                echo '<h3>„' . $row['text_quote'] . '”</h3>';
-                            }
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    }
-
-                    $link->close();
-                }
-            } catch (Exception $e) {
-                echo "Server error! Sorry :/";
-                echo "<br/> Information for the developer: " . $e;
-            }
-
-            ?>
-        </div>
-        <div class="quote-box">
-            <?php
-            require_once "connect.php";
-
-            try {
-                $link = new mysqli($db_server, $db_login, $db_password, $db_name);
-                if ($link->connect_errno != 0) {
-                    throw new Exception(mysqli_connect_errno());
-                } else {
-                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.* FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=6 ORDER BY RAND() LIMIT 1");
+                    $result = $link->query("SELECT quotes.*, categories.name AS 'category_name', authors.*, authors.id AS 'author_id' FROM quotes INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN categories ON quotes.categories_id=categories.id WHERE quotes.categories_id=3 ORDER BY RAND() LIMIT 1");
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -387,9 +283,7 @@ try {
                     </a>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in tristique nulla. Suspendisse mattis, dolor ut luctus convallis, arcu nibh vulputate risus, in sagittis risus erat ac sem.</p>
                 </div>
-                <div class="box">
-                    <p></p>
-                </div>
+                <div class="box"></div>
                 <div class="box"></div>
                 <div class="box"></div>
             </div>
@@ -405,7 +299,8 @@ try {
         </a>
     </div>
     <script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll@15.0.0/dist/smooth-scroll.polyfills.min.js"></script>
-    <script src="js/home.js"></script>
+    <script src="js/home.js">
+    </script>
 </body>
 
 </html>

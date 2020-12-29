@@ -635,15 +635,49 @@ section#home-category .wrapper img {
 section#category-quotes {
     width: 100%;
     display: flex;
-    justify-content: center;
+    align-items: center;
     padding: 0 50px;
+    flex-direction: column;
 }
 
 section#category-quotes .wrapper {
     display: flex;
-    flex-basis: 75%;
+    width: 75%;
     align-items: center;
     flex-wrap: wrap;
+}
+
+section#category-quotes .wrapper .box-info {
+    flex-basis: 100%;
+    display: flex;
+    margin-bottom: 75px;
+}
+
+section#category-quotes .wrapper .box-info .box-left {
+    flex-basis: 60%;
+}
+
+section#category-quotes .wrapper .box-info .box-left h3 {
+    font-size: 2.3rem;
+    margin: 10px 0;
+}
+
+section#category-quotes .wrapper .box-info .box-left h3 .numbers {
+    padding: 7px 20px;
+    background: linear-gradient(90deg, var(--theme-color-gradient), var(--theme-color));
+    margin-left: 10px;
+    color: #fff;
+}
+
+section#category-quotes .wrapper .box-info .box-right {
+    flex-basis: 40%;
+}
+
+section#category-quotes .wrapper .box-info .box-right img {
+    width: 100%;
+    object-fit: cover;
+    min-height: 250px;
+    /* max-height: 550px; */
 }
 
 section#category-quotes .wrapper .box {
@@ -1074,6 +1108,42 @@ section#addquote .right-wrapper {
     padding: 50px 0 50px 50px;
 }
 
+/* Added author */
+section#addquote .right-wrapper .box .wrapper-added {
+    display: flex;
+    margin-bottom: 50px;
+}
+
+section#addquote .right-wrapper .box .wrapper-added .wrapper-added-left {
+    flex-basis: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+section#addquote .right-wrapper .box .wrapper-added .wrapper-added-left h4 {
+    font-size: 2.5rem;
+    margin: 15px 0;
+    text-transform: capitalize;
+}
+
+section#addquote .right-wrapper .box .wrapper-added .wrapper-added-left h5 {
+    font-size: 1.6rem;
+    margin: 10px 0;
+}
+
+section#addquote .right-wrapper .box .wrapper-added .wrapper-added-right {
+    flex-basis: 50%;
+    height: 100%;
+}
+
+section#addquote .right-wrapper .box .wrapper-added .wrapper-added-right img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+}
+
 section#addquote .right-wrapper .box .wrapper-btn {
     display: flex;
     width: 70%;
@@ -1276,7 +1346,6 @@ section#addquote .right-wrapper .box form .img-wrapper .box-quote-img #img-quote
     z-index: -1;
 }
 
-
 section#addquote .right-wrapper .box form .img-wrapper .box-quote-img label #text-img-quote {
     color: var(--theme-color-gradient);
 }
@@ -1389,6 +1458,195 @@ section#addquote .right-wrapper .box form input[type="submit"] {
     align-self: flex-end;
 }
 
+/* Add author */
+section#addquote .right-wrapper .box form .wrapper-name-author,
+section#addquote .right-wrapper .box form .wrapper-surname-author,
+section#addquote .right-wrapper .box form .wrapper-born-date,
+section#addquote .right-wrapper .box form .wrapper-death-date {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 25px 0;
+}
+
+section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author,
+section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author,
+section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date,
+section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date {
+    width: 60%;
+    display: flex;
+    background: var(--second-color);
+    padding: 15px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+section#addquote .right-wrapper .box form .wrapper-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+section#addquote .right-wrapper .box form .wrapper-button .box-button,
+section#addquote .right-wrapper .box form .wrapper-born-date .box-button {
+    width: 60%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+section#addquote .right-wrapper .box form .wrapper-button .box-button button,
+section#addquote .right-wrapper .box form .wrapper-born-date .box-button button {
+    padding: 10px 20px;
+    background: var(--theme-color-gradient);
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+section#addquote .right-wrapper .box form .wrapper-born-date .box-button button {
+    margin-top: 25px;
+}
+
+section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author input,
+section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author input {
+    flex-basis: 100%;
+    color: var(--third-color);
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    height: 32px;
+    outline: none;
+    resize: none;
+    font-weight: bold;
+}
+
+/* section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date .center-input,
+section#addquote .right-wrapper .box form .wrapper-born-date .box-death-date .center-input {
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+} */
+
+section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date .center-input input,
+section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date .center-input input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: var(--theme-color-gradient);
+    font-size: 18px;
+    width: 140px;
+    height: 32px;
+}
+
+
+section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author label::before,
+section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author label::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: -100%;
+    height: 4px;
+    width: 100%;
+    background: var(--theme-color-gradient);
+    transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author input:focus+label::before,
+section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author input:valid+label::before,
+section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author input:focus+label::before,
+section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author input:valid+label::before {
+    right: 0;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 25px 0;
+}
+
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author {
+    width: 80%;
+    display: flex;
+    background: var(--second-color);
+    padding: 15px 30px;
+    justify-content: space-between;
+}
+
+section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date,
+section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author span {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: rgb(118, 118, 118);
+    flex-basis: 25%;
+    font-family: 'Barlow Condensed', sans-serif;
+}
+
+section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date span,
+section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date span {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    color: rgb(118, 118, 118);
+    flex-basis: 30%;
+    font-family: 'Barlow Condensed', sans-serif;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author label {
+    flex-grow: 1;
+    height: 100%;
+    padding: 5.5px 10px;
+    border-bottom: 1px solid #d1d2dd;
+    font-size: 18px;
+    color: var(--theme-color-gradient);
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author label #text-img-quote {
+    color: var(--theme-color-gradient);
+    flex-grow: 1;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author label i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 10%;
+}
+
+section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author #img-author::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
 /* Scroll up */
 .scroll-up {
     width: 40px;
@@ -1459,6 +1717,7 @@ footer p a:hover {
     background: #fff;
     padding: 0;
     height: auto;
+    background: var(--theme-color);
     border-bottom: 4px solid var(--theme-color-gradient);
 }
 
@@ -1476,13 +1735,37 @@ footer p a:hover {
 }
 
 #home-footer .wrapper .up .box {
-    flex-basis: 25%;
+    flex-basis: calc(100% / 3);
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     text-align: center;
+}
+
+#home-footer .wrapper .up .box .social-wrapper {
+    width: 60%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#home-footer .wrapper .up .box .social-wrapper a {
+    background: darkblue;
+    flex-basis: 30%;
+    height: 20px;
+}
+
+#home-footer .wrapper .up .box:first-of-type {
+    background: red;
+}
+
+#home-footer .wrapper .up .box:nth-of-type(2) {
+    background: blue;
+}
+
+#home-footer .wrapper .up .box:nth-of-type(3) {
+    background: orange;
 }
 
 #home-footer .wrapper .up .box p {
