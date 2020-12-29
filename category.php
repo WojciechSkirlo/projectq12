@@ -41,6 +41,7 @@ try {
     </title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link rel="Shortcut icon" href="img/logo.svg" />
@@ -85,6 +86,7 @@ try {
             </div>
         </div>
         <div class="nav-down">
+            <div class="empty-box"></div>
             <div class="wrapper">
                 <a href="home.php">home</a>
                 <!-- <a href="#">the latest</a> -->
@@ -132,6 +134,22 @@ try {
                 ">sad</a>
                 <a href="#">Contact</a>
             </div>
+            <div class="search-bar">
+                <i class="fas fa-search" id="open-search-bar"></i>
+            </div>
+            <div class="search" id="search-bar-box" style="display: none">
+                <div class="search-wrapper">
+                    <div class="search-wrapper-up">
+                        <i class="fas fa-times" id="close-search-bar"></i>
+                    </div>
+                    <div class="search-wrapper-down">
+                        <form action="search.php" method="POST">
+                            <input type="text" name="searchresults" maxlength="200" placeholder="Search" />
+                            <button name="btn-search"><i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -170,7 +188,7 @@ try {
                 if ($link->connect_errno != 0) {
                     throw new Exception(mysqli_connect_errno());
                 } else {
-                    $results_per_page = 12;
+                    $results_per_page = 11;
 
                     $result = $link->query("SELECT id FROM quotes WHERE categories_id='$categories_id'");
                     $how_many_quote = $result->num_rows;
@@ -190,6 +208,7 @@ try {
                     }
                     $how_many = $result->num_rows;
                     if ($how_many > 0) {
+                        echo '<div class="wrapper-box">';
                         while ($row = $result->fetch_assoc()) {
                             echo '<div class="box">';
                             echo '<div class="img-box">';
@@ -214,6 +233,7 @@ try {
                             echo '</div>';
                             echo '</div>';
                         }
+                        echo '</div>';
                     }
                     $link->close();
                 }
@@ -380,21 +400,44 @@ try {
         <div class="wrapper">
             <div class="up">
                 <div class="box">
-                    <a href="#">
+                    <a href="home.php">
                         <div class="logo">
                             <img src="img/logo.svg" />
                         </div>
                     </a>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in tristique nulla. Suspendisse mattis, dolor ut luctus convallis, arcu nibh vulputate risus, in sagittis risus erat ac sem.</p>
+                    <h3>Social media</h3>
+                    <div class="social-wrapper">
+                        <a href="" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="box">
-                    <p></p>
+                    <h3>Quick menu</h3>
+                    <a href="home.php" class="active">home</a>
+                    <!-- <a href="#">the latest</a> -->
+                    <a href="category.php?id_category=1">love</a>
+                    <a href="category.php?id_category=2">life</a>
+                    <a href="category.php?id_category=3">woman</a>
+                    <a href="category.php?id_category=4">man</a>
+                    <a href="category.php?id_category=5">god</a>
+                    <a href="category.php?id_category=6">sad</a>
+                    <a href="#">Contact</a>
                 </div>
-                <div class="box"></div>
-                <div class="box"></div>
+                <div class="box">
+                    <h3>Contact</h3>
+                    <a href="tel:+48332222223">TEL:. +48 332 222 223</a>
+                    <a href="mailto:projectq12@gmail.com">EMAIL:. projectq12@gmail.com</a>
+                </div>
             </div>
             <div class="down">
-                <p>All right reserved.</p>
+                <p>All right reserved by <a href="home.php">ProjectQ12</a></p>
                 <p>Created by: <a href="http://woytek-portfolio.pl/" target="_blank">Woytek</a></p>
             </div>
         </div>
@@ -406,6 +449,7 @@ try {
     </div>
     <script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll@15.0.0/dist/smooth-scroll.polyfills.min.js"></script>
     <script src="js/home.js"></script>
+    <script src="js/searchbar.js"></script>
 </body>
 
 </html>
