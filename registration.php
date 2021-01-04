@@ -115,7 +115,7 @@ if (isset($_POST['email'])) {
         <!-- Aside section -->
         <section id="left-container">
             <div class="sign-up-link">
-                <a href="index.php"><img src="img/logo.svg" /></a>
+                <a href="index.php"><img src="img/logo.svg" alt="logo projectq12" /></a>
                 <h2>You have account already?</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla blandit, turpis sit amet vestibulum suscipit, urna nunc interdum felis, pulvinar laoreet lacus velit eu velit.</p>
                 <div class="btn-sign-up">
@@ -269,7 +269,7 @@ if (isset($_POST['email'])) {
     </main>
     <footer>
         <p>All right reserved.</p>
-        <p>Created by: <a href="http://woytek-portfolio.pl/" target="_blank">Woytek</a></p>
+        <p>Created by: <a href="http://woytek-portfolio.pl/" target="_blank" rel="noopener">Woytek</a></p>
     </footer>
 
     <!-- Effect after click button -->

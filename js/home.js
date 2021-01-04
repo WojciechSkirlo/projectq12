@@ -74,8 +74,49 @@ window.addEventListener('scroll', function () {
     }
 })
 
-// <script>
 var scroll = new SmoothScroll('a[href*="#"]', {
     speed: 500
 });
-// </script>
+
+
+// Mobile menu
+let btnOpen = $('#nav-hamburger-open');
+let btnClose = $('#nav-hamburger-close');
+let btnCloseTwo = $('nav#mobile-nav .nav-left');
+btnOpen.on('click', function () {
+    $('#belt1').toggleClass('rotate-up');
+    $('#belt2').toggleClass('disappear');
+    $('#belt3').toggleClass('rotate-down');
+    $('#mobile-nav').toggleClass('show');
+    $('body').toggleClass('fixed');
+    $('#darker-screen').toggleClass('show');
+})
+
+btnClose.on('click', function () {
+    $('#belt1').toggleClass('rotate-up');
+    $('#belt2').toggleClass('disappear');
+    $('#belt3').toggleClass('rotate-down');
+    $('#mobile-nav').toggleClass('show');
+    $('body').toggleClass('fixed');
+    $('#darker-screen').toggleClass('show');
+})
+
+btnCloseTwo.on('click', function () {
+    $('#belt1').toggleClass('rotate-up');
+    $('#belt2').toggleClass('disappear');
+    $('#belt3').toggleClass('rotate-down');
+    $('#mobile-nav').toggleClass('show');
+    $('body').toggleClass('fixed');
+    $('#darker-screen').toggleClass('show');
+})
+
+$(window).resize(function () {
+    if ($(window).width() > 800) {
+        $('#darker-screen').removeClass('show');
+        $('#mobile-nav').removeClass('show');
+        $('#belt1').removeClass('rotate-up');
+        $('#belt2').removeClass('disappear');
+        $('#belt3').removeClass('rotate-down');
+        $('body').removeClass('fixed');
+    }
+})
