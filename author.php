@@ -89,6 +89,12 @@ try {
                         <span>Add quote</span>
                     </div>
                 </a>
+                <a href="addauthor.php">
+                    <div class="info-wrapper">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Add author</span>
+                    </div>
+                </a>
             </div>
             <a href="home.php">
                 <div class="logo">
@@ -232,6 +238,14 @@ try {
                         </div>
                     </a>
                 </div>
+                <div class="info">
+                    <a href="addauthor.php">
+                        <div class="info-wrapper">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Add author</span>
+                        </div>
+                    </a>
+                </div>
                 <?php
                 echo '<div class="text-info">';
                 // echo "<p><b>Login:</b> " . $_SESSION['login'] . "</p>";
@@ -320,7 +334,7 @@ try {
                     }
                     $this_page_first_result = ($page - 1) * $results_per_page;
 
-                    $result = $link->query("SELECT quotes.*, quotes.id AS 'quotes_id', authors.*, categories.name AS 'name_category', users.* FROM quotes INNER JOIN categories ON quotes.categories_id=categories.id INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id WHERE quotes.author_id='$author_id' ORDER BY quotes.creation_date DESC LIMIT " . $this_page_first_result . ', ' . $results_per_page);
+                    $result = $link->query("SELECT quotes.*, quotes.id AS 'quotes_id', authors.*, categories.name AS 'name_category', users.*, users.id AS 'user_id' FROM quotes INNER JOIN categories ON quotes.categories_id=categories.id INNER JOIN authors ON quotes.author_id=authors.id INNER JOIN users ON quotes.user_id=users.id WHERE quotes.author_id='$author_id' ORDER BY quotes.creation_date DESC LIMIT " . $this_page_first_result . ', ' . $results_per_page);
                     if (!$result) {
                         throw new Exception($link->error);
                     }
@@ -347,7 +361,7 @@ try {
                             echo '</div>';
                             echo '</a>';
                             echo '<div class="add-box">';
-                            echo '<span class="info">Added by: <a href="#">' . $row['user'] . '</a></span>';
+                            echo '<span class="info">Added by: <a href=user.php?id_user=' . $row['user_id'] . '>' . $row['user'] . '</a></span>';
                             echo '<span class="info">Category: <a href=category.php?id_category=' . $row['categories_id'] . '>' . $row['name_category'] . '</a></span>';
                             echo '<span class="info">Author: <a href=author.php?id_author=' . $row['author_id'] . '>' . $row['name'] . " " . $row['surname'] . '</a></span>';
                             echo '</div>';

@@ -542,7 +542,7 @@ nav#mobile-nav .nav-left {
 
 nav#mobile-nav .nav-right {
     flex-basis: 70%;
-    height: 100%;
+    height: calc(var(--vh, 1vh) * 100);
     max-height: 100%;
     background: #fff;
     display: flex;
@@ -564,7 +564,7 @@ nav#mobile-nav .nav-right .nav-up .logged-as p {
 }
 
 nav#mobile-nav .nav-right .menu {
-    padding: 15px 20px;
+    padding: 5px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -599,8 +599,12 @@ nav#mobile-nav .nav-right .down {
     align-items: center;
 }
 
+nav#mobile-nav .nav-right .down .info:nth-of-type(2) {
+    margin-top: 20px;
+}
+
 nav#mobile-nav .nav-right .search-bar {
-    flex-basis: 30px;
+    flex-basis: 30px !important;
     padding: 15px 20px;
     display: flex;
     justify-content: center;
@@ -634,6 +638,7 @@ nav#mobile-nav .nav-right .down .info {
     background: linear-gradient(90deg, var(--theme-color-gradient), var(--theme-color));
     flex-basis: 50px;
     border-radius: 55px;
+    height: 50px;
     transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
@@ -642,6 +647,7 @@ nav#mobile-nav .nav-right .down .text-info {
     flex-basis: 50px;
     border-radius: 55px;
     margin-top: 20px;
+    height: 50px;
     transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
@@ -884,7 +890,7 @@ section#searched-results {
 
 section#searched-results .wrapper {
     display: flex;
-    width: 75%;
+    width: 1400px;
     align-items: center;
 }
 
@@ -937,7 +943,7 @@ section#home-category {
 
 section#home-category .wrapper {
     display: flex;
-    flex-basis: 75%;
+    flex-basis: 1400px;
     align-items: center;
 }
 
@@ -1160,7 +1166,7 @@ section#category-quotes .wrapper .wrapper-box-authors .box {
 section#category-quotes .wrapper .wrapper-box-authors a.author {
     flex-basis: 24%;
     margin-right: calc(4% / 3);
-    margin-bottom: calc(4% / 4);
+    margin-bottom: calc(4% / 3);
     height: 530px;
     display: flex;
     position: relative;
@@ -1384,7 +1390,7 @@ section#category-quotes .wrapper .box .add-box {
     color: #fff;
     width: 100%;
     height: 30%;
-    padding: 30px;
+    padding: 20px 30px;
     z-index: 3;
     transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
     display: flex;
@@ -1399,6 +1405,10 @@ section#category-quotes .wrapper .box .add-box span.info {
     color: var(--third-color);
     padding: 7.5px 15px;
     margin-top: 5px;
+}
+
+section#category-quotes .wrapper .box .add-box span.info:first-of-type {
+    margin-top: 0;
 }
 
 section#category-quotes .wrapper .box:hover .add-box {
@@ -2755,7 +2765,6 @@ footer p a:hover {
 
 
 /* Main MEDIA QUERY */
-
 @media (max-width: 1600px) {
 
     /* Section authors */
@@ -2774,6 +2783,52 @@ footer p a:hover {
 
     section#main-quote .right-wrapper .box {
         flex-basis: 80%;
+    }
+
+    section#home-category,
+    section#searched-results {
+        padding: 50px 30px;
+    }
+
+    section#home-category .wrapper {
+        flex-basis: 1200px;
+    }
+
+    section#searched-results .wrapper {
+        width: 1200px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box,
+    section#category-quotes .wrapper .wrapper-box-authors .box,
+    section#category-quotes .wrapper .wrapper-box-authors a.author {
+        width: 24.5%;
+        margin-right: calc(2% / 3);
+        margin-bottom: calc(2% / 3);
+        height: 570px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(1) {
+        width: calc(49% + (2% / 3));
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box .text-box h2 {
+        color: var(--third-color);
+        font-size: 2.7rem;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box .text-box h3 {
+        color: var(--third-color);
+        font-size: 2.1rem;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box .text-box h4 {
+        color: var(--third-color);
+        font-size: 1.4rem;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box .text-box h5 {
+        color: var(--third-color);
+        font-size: 1.1rem;
     }
 }
 
@@ -2814,6 +2869,44 @@ footer p a:hover {
     /* Footer */
     #home-footer .wrapper {
         flex-basis: 1000px;
+    }
+
+    section#home-category .wrapper {
+        flex-basis: 1000px;
+    }
+
+    section#searched-results .wrapper {
+        width: 1000px;
+    }
+
+    section#home-category .wrapper h3,
+    section#searched-results .wrapper h3 {
+        font-size: 2.5rem;
+        text-transform: uppercase;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box {
+        width: 32.5%;
+        margin-right: calc(2.5% / 3);
+        margin-bottom: calc(2.5% / 3);
+        height: 530px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(4n + 3) {
+        margin-right: calc(2.5% / 3);
+        margin-bottom: calc(2.5% / 3);
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(1) {
+        width: 32.5%;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(3n) {
+        margin-right: 0;
+    }
+
+    section#category-quotes {
+        padding: 0;
     }
 }
 
@@ -2885,6 +2978,53 @@ footer p a:hover {
     #home-footer .wrapper .up .box {
         padding: 15px;
     }
+
+    section#home-category .wrapper {
+        flex-basis: 800px;
+    }
+
+    section#searched-results .wrapper {
+        width: 800px;
+    }
+
+    /* Appearance of category page */
+    section#category-quotes .wrapper .wrapper-box .box,
+    section#category-quotes .wrapper .wrapper-box-authors .box {
+        width: 49.5%;
+        margin-right: calc(2% / 2);
+        margin-bottom: calc(2% / 2);
+        height: 530px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box-authors a.author {
+        flex-basis: 49.5%;
+        margin-right: calc(2% / 2);
+        margin-bottom: calc(2% / 2);
+        height: 530px;
+        display: flex;
+        position: relative;
+    }
+
+    section#category-quotes .wrapper .wrapper-box-authors a.author:nth-of-type(2n) {
+        margin-right: 0;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(4n + 3) {
+        margin-bottom: calc(2% / 2);
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(1) {
+        width: 49.5%;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(3n) {
+        margin-right: calc(2% / 2);
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(2n) {
+        margin-right: 0;
+    }
+
 }
 
 @media (max-width: 900px) {
@@ -2910,18 +3050,38 @@ footer p a:hover {
         width: 750px;
     }
 
-    section#category-quotes .wrapper .quote-section {
+    section#category-quotes .wrapper .quote-section,
+    section#category-quotes .wrapper .box-info,
+    section#category-quotes .wrapper .user-section {
         flex-direction: column;
         align-items: stretch;
     }
 
-    section#category-quotes .wrapper .quote-section .quote-section-left {
+    section#category-quotes .wrapper .quote-section .quote-section-left,
+    section#category-quotes .wrapper .box-info .box-left,
+    section#category-quotes .wrapper .user-section .user-section-left {
         order: 2;
         margin-top: 50px;
     }
 
-    section#category-quotes .wrapper .quote-section .quote-section-right {
+    section#category-quotes .wrapper .quote-section .quote-section-right,
+    section#category-quotes .wrapper .box-info .box-right,
+    section#category-quotes .wrapper .user-section .user-section-right {
         order: 1;
+    }
+
+    section#category-quotes .wrapper .box-info .box-right,
+    section#category-quotes .wrapper .box-info .box-left {
+        width: 100%;
+    }
+
+    section#category-quotes .wrapper .user-section .user-section-right {
+        display: flex;
+        justify-content: center;
+    }
+
+    section#category-quotes .wrapper .user-section .user-section-right img {
+        width: auto;
     }
 
     /* Section quote-img */
@@ -2932,6 +3092,7 @@ footer p a:hover {
 
     section#quote-img .quote-box {
         height: 600px;
+        flex-basis: 600px !important;
     }
 
     section#quote-img .quote-box .background {
@@ -2945,6 +3106,15 @@ footer p a:hover {
     section#quote-img .quote-box .background .text h4 {
         font-size: 1.6rem;
     }
+
+    section#home-category .wrapper {
+        flex-basis: 750px;
+    }
+
+    section#searched-results .wrapper {
+        width: 750px;
+    }
+
 }
 
 @media (max-width: 800px) {
@@ -2975,8 +3145,10 @@ footer p a:hover {
 
     /* Section quote-of-the-day */
     #video {
-        height: calc(100vh - 75px);
+        /* height: calc(100vh - 75px); */
         min-height: 575px;
+        height: calc(var(--vh, 1vh) * 100 - 73px);
+        transition: 750ms cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     /* Quote on each page */
@@ -3009,6 +3181,7 @@ footer p a:hover {
 
     section#quote-img .quote-box {
         height: 500px;
+        flex-basis: 500px !important;
     }
 
     /* Section authors */
@@ -3042,15 +3215,12 @@ footer p a:hover {
     }
 
     /* Home-category */
-    section#home-category {
-        padding: 50px 30px;
-    }
-
     section#home-category .wrapper {
         flex-basis: 100%;
     }
 
-    section#home-category .wrapper h3 {
+    section#home-category .wrapper h3,
+    section#searched-results .wrapper h3 {
         font-size: 2rem;
         text-transform: uppercase;
     }
@@ -3059,7 +3229,61 @@ footer p a:hover {
         display: none;
     }
 
+    section#searched-results .wrapper {
+        width: 100%;
+    }
+}
 
+@media (max-width: 700px) {
+
+    /* Appearance of category page */
+    section#category-quotes .wrapper .wrapper-box .box,
+    section#category-quotes .wrapper .wrapper-box-authors .box {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1%;
+        height: 530px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box-authors {
+        padding: 0 10px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box-authors a.author {
+        flex-basis: 100%;
+        margin-right: 0;
+        margin-bottom: 3%;
+        height: 530px;
+        position: relative;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(4n + 3) {
+        margin-bottom: 1%;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(1) {
+        width: 100%;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box:nth-of-type(3n) {
+        margin-right: 0
+    }
+
+    section#category-quotes .wrapper .box .add-box {
+        right: 0;
+    }
+
+    #category-quotes .wrapper h3.info {
+        margin-top: 15px;
+    }
+
+    #category-quotes .wrapper:nth-of-type(1) h3.info:nth-of-type(1) {
+        margin: 5px 20px;
+    }
+
+    section#searched-results {
+        padding: 50px 30px 30px 30px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -3072,6 +3296,7 @@ footer p a:hover {
 
     section#quote-img .quote-box {
         height: 650px;
+        flex-basis: 650px !important;
     }
 
     /* Video */
@@ -3116,6 +3341,11 @@ footer p a:hover {
         margin-bottom: 10px;
     }
 
+    section#category-quotes .wrapper h3.info {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
     /* Section authors */
     section#authors .wrapper {
         width: 100%;
@@ -3135,14 +3365,21 @@ footer p a:hover {
         padding: 0;
     }
 
-    section#category-quotes .wrapper .quote-section .quote-section-left {
+    section#category-quotes .wrapper .quote-section .quote-section-left,
+    section#category-quotes .wrapper .box-info .box-left,
+    section#category-quotes .wrapper .user-section .user-section-left {
         order: 2;
         margin-top: 50px;
         padding: 0 20px;
     }
 
-    section#category-quotes .wrapper .quote-section .quote-section-left h3.info-two {
+    section#category-quotes .wrapper .quote-section .quote-section-left h3.info-two,
+    section#category-quotes .wrapper .box-info .box-left h3.info-two {
         font-size: 1.3rem;
+    }
+
+    section#category-quotes .wrapper .box-info .box-left h4.info-two {
+        font-size: 1.1rem;
     }
 
     /* Quote on each page */
@@ -3179,6 +3416,17 @@ footer p a:hover {
         flex-basis: 70%;
     }
 
+    section#category-quotes .wrapper .quote-section .quote-section-right .box h2 {
+        font-size: 3rem;
+    }
+
+    section#category-quotes .wrapper .quote-section .quote-section-right .box h3 {
+        font-size: 2.7rem;
+    }
+
+    section#break-margin {
+        margin-top: 30px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -3251,6 +3499,10 @@ footer p a:hover {
         padding: 10px;
     }
 
+    section#category-quotes .wrapper .quote-section .quote-section-right .box {
+        padding: 25px;
+    }
+
     section#main-quote .left-wrapper {
         padding: 0 15px 50px 15px;
     }
@@ -3265,6 +3517,10 @@ footer p a:hover {
 
     section#quote-img .quote-box .background .text h4 {
         font-size: 1.4rem;
+    }
+
+    section#category-quotes .wrapper .wrapper-box .box .text-box {
+        padding: 25px;
     }
 
 }

@@ -159,6 +159,12 @@ if (isset($_POST['quote-text'])) {
                         <span>Add quote</span>
                     </div>
                 </a>
+                <a href="addauthor.php">
+                    <div class="info-wrapper">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Add author</span>
+                    </div>
+                </a>
             </div>
             <a href="home.php">
                 <div class="logo">
@@ -263,6 +269,14 @@ if (isset($_POST['quote-text'])) {
                         <div class="info-wrapper">
                             <i class="fas fa-quote-right"></i>
                             <span>Add quote</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="info">
+                    <a href="addauthor.php">
+                        <div class="info-wrapper">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Add author</span>
                         </div>
                     </a>
                 </div>

@@ -48,6 +48,12 @@ if (isset($_POST['btn-search'])) {
                         <span>Add quote</span>
                     </div>
                 </a>
+                <a href="addauthor.php">
+                    <div class="info-wrapper">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Add author</span>
+                    </div>
+                </a>
             </div>
             <a href="home.php">
                 <div class="logo">
@@ -152,6 +158,14 @@ if (isset($_POST['btn-search'])) {
                         <div class="info-wrapper">
                             <i class="fas fa-quote-right"></i>
                             <span>Add quote</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="info">
+                    <a href="addauthor.php">
+                        <div class="info-wrapper">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Add author</span>
                         </div>
                     </a>
                 </div>
@@ -339,7 +353,7 @@ if (isset($_POST['btn-search'])) {
                                 echo '<a href="author.php?id_author=' . $row['id'] . '" class="author">';
                                 echo '<div class="box">';
                                 echo '<div class="img-box">';
-                                echo '<img src="' . $row['img_author'] . '" />';
+                                echo '<img src="' . $row['img_author'] . '" alt="' . $row['name'] . " " . $row['surname'] . '" class="thumbnail"/>';
                                 echo '</div>';
                                 echo '<div class="background-box"></div>';
                                 echo '<div class="text-box">';
