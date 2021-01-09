@@ -1003,6 +1003,10 @@ section#category-quotes .wrapper .user-section {
     align-items: center;
 }
 
+section#category-quotes .wrapper .user-section {
+    margin-bottom: 50px;
+}
+
 section#category-quotes .wrapper .quote-section .quote-section-left,
 section#category-quotes .wrapper .user-section .user-section-left {
     flex-basis: 50%;
@@ -1239,9 +1243,13 @@ section#category-quotes .wrapper .wrapper-box-user a {
     text-decoration: none;
     color: var(--third-color);
     display: flex;
-    width: 20%;
-    margin-right: calc(4% / 5);
-    margin-bottom: calc(4% / 5);
+    width: 19%;
+    margin-right: calc(5% / 4);
+    margin-bottom: calc(5% / 4);
+}
+
+section#category-quotes .wrapper .wrapper-box-user a:nth-of-type(5n) {
+    margin-right: 0;
 }
 
 section#category-quotes .wrapper .wrapper-box-user a:hover .box-user img {
@@ -2910,6 +2918,23 @@ footer p a:hover {
     section#category-quotes {
         padding: 0;
     }
+
+    section#category-quotes .wrapper .wrapper-box-user a {
+        text-decoration: none;
+        color: var(--third-color);
+        display: flex;
+        width: 32%;
+        margin-right: calc(4% / 2);
+        margin-bottom: calc(4% / 2);
+    }
+
+    section#category-quotes .wrapper .wrapper-box-user a:nth-of-type(5n) {
+        margin-right: calc(4% / 2);
+    }
+
+    section#category-quotes .wrapper .wrapper-box-user a:nth-of-type(3n) {
+        margin-right: 0;
+    }
 }
 
 @media (max-width: 1050px) {
@@ -3297,10 +3322,6 @@ footer p a:hover {
         margin-top: 15px;
     }
 
-    #category-quotes .wrapper:nth-of-type(1) h3.info:nth-of-type(1) {
-        margin: 5px 20px;
-    }
-
     section#searched-results {
         padding: 50px 30px 30px 30px;
     }
@@ -3346,6 +3367,27 @@ footer p a:hover {
 
     section#addquote .right-wrapper .box .wrapper-added .wrapper-added-right img {
         margin-top: 15px;
+    }
+
+    section#category-quotes .wrapper .wrapper-box-user a {
+        text-decoration: none;
+        color: var(--third-color);
+        display: flex;
+        width: 49%;
+        margin-right: calc(2% / 1);
+        margin-bottom: calc(2% / 1);
+    }
+
+    section#category-quotes .wrapper .wrapper-box-user a:nth-of-type(5n) {
+        margin-right: calc(2% / 1);
+    }
+
+    section#category-quotes .wrapper .wrapper-box-user a:nth-of-type(3n) {
+        margin-right: calc(2% / 1);
+    }
+
+    section#category-quotes .wrapper .wrapper-box-user a:nth-of-type(2n) {
+        margin-right: 0;
     }
 }
 
