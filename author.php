@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['logged'])) {
+if ((!isset($_SESSION['logged'])) || (!isset($_GET['id_author']))) {
     header('Location: index.php');
     exit();
 }

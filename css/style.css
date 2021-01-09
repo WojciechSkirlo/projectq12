@@ -1719,7 +1719,6 @@ section#quote-img .quote-box:first-child {
 /* Add quote */
 section#addquote {
     display: flex;
-    display: flex;
     margin: 0 0 100px 0;
 }
 
@@ -1733,7 +1732,7 @@ section#addquote .left-wrapper {
 }
 
 section#addquote .left-wrapper .box {
-    flex-basis: 50%;
+    flex-basis: 60%;
 }
 
 section#addquote .left-wrapper h3,
@@ -1791,17 +1790,17 @@ section#addquote .right-wrapper .box .wrapper-added .wrapper-added-right img {
 
 section#addquote .right-wrapper .box .wrapper-btn {
     display: flex;
-    width: 70%;
+    width: 100%;
     justify-content: space-evenly;
 }
 
 section#addquote .right-wrapper .box .wrapper-btn a {
-    font-size: 19px;
+    font-size: 18px;
     color: var(--third-color);
     background: linear-gradient(90deg, var(--theme-color-gradient), var(--theme-color));
     border-radius: 40px;
     text-decoration: none;
-    width: 200px;
+    width: 170px;
     height: 50px;
     display: flex;
     justify-content: center;
@@ -1818,7 +1817,7 @@ section#addquote .right-wrapper .box .wrapper-btn a:hover {
 section#addquote .right-wrapper .box {
     display: flex;
     flex-direction: column;
-    flex-basis: 70%;
+    flex-basis: 75%;
 }
 
 section#addquote .right-wrapper .box p {
@@ -2087,6 +2086,7 @@ section#addquote .right-wrapper .box form .author-wrapper p {
 section#addquote .right-wrapper .box form .author-wrapper p.author-add {
     margin: 30px 0 10px 0;
     font-size: 17px;
+    text-align: center;
 }
 
 section#addquote .right-wrapper .box form .author-wrapper a {
@@ -2777,11 +2777,13 @@ footer p a:hover {
         width: 1200px;
     }
 
-    section#main-quote .left-wrapper .box {
+    section#main-quote .left-wrapper .box,
+    section#addquote .right-wrapper .box {
         flex-basis: 85%;
     }
 
-    section#main-quote .right-wrapper .box {
+    section#main-quote .right-wrapper .box,
+    section#addquote .left-wrapper .box {
         flex-basis: 80%;
     }
 
@@ -2937,7 +2939,8 @@ footer p a:hover {
     }
 
     /* Main quote */
-    section#main-quote {
+    section#main-quote,
+    section#addquote {
         flex-direction: column;
     }
 
@@ -2945,11 +2948,17 @@ footer p a:hover {
         padding: 0 50px 50px 50px;
     }
 
-    section#main-quote .left-wrapper .box {
+    section#addquote .right-wrapper {
+        padding: 50px 50px 0 50px;
+    }
+
+    section#main-quote .left-wrapper .box,
+    section#addquote .right-wrapper .box {
         flex-basis: 100%;
     }
 
-    section#main-quote .right-wrapper .box {
+    section#main-quote .right-wrapper .box,
+    section#addquote .left-wrapper .box {
         flex-basis: 85%;
     }
 
@@ -3115,6 +3124,13 @@ footer p a:hover {
         width: 750px;
     }
 
+    section#addquote .left-wrapper {
+        padding: 50px;
+    }
+
+    section#addquote .left-wrapper .box {
+        flex-basis: 100%;
+    }
 }
 
 @media (max-width: 800px) {
@@ -3159,6 +3175,10 @@ footer p a:hover {
     /* Main quote */
     section#main-quote .left-wrapper {
         padding: 0 30px 50px 30px;
+    }
+
+    section#addquote .right-wrapper {
+        padding: 50px 30px 0 30px;
     }
 
     section#main-quote .left-wrapper .box h3 {
@@ -3283,6 +3303,49 @@ footer p a:hover {
 
     section#searched-results {
         padding: 50px 30px 30px 30px;
+    }
+
+    section#addquote .right-wrapper .box h3 img {
+        display: none;
+    }
+
+    section#addquote .right-wrapper .box form .author-wrapper .box-author,
+    section#addquote .right-wrapper .box form .wrapper-category .box-category,
+    section#addquote .right-wrapper .box form .img-wrapper .box-quote-img {
+        width: 90%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author,
+    section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author,
+    section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date,
+    section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date {
+        width: 80%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-button .box-button {
+        width: 80%;
+    }
+
+    section#addquote .right-wrapper .box .wrapper-btn {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+
+    section#addquote .right-wrapper .box .wrapper-btn a {
+        margin: 10px;
+    }
+
+    section#addquote .right-wrapper .box .wrapper-added {
+        flex-direction: column;
+    }
+
+    section#addquote .right-wrapper .box .wrapper-added .wrapper-added-left h4 {
+        margin: 5px 0;
+    }
+
+    section#addquote .right-wrapper .box .wrapper-added .wrapper-added-right img {
+        margin-top: 15px;
     }
 }
 
@@ -3427,6 +3490,39 @@ footer p a:hover {
     section#break-margin {
         margin-top: 30px;
     }
+
+    section#addquote .right-wrapper .box form .author-wrapper .box-author,
+    section#addquote .right-wrapper .box form .wrapper-category .box-category,
+    section#addquote .right-wrapper .box form .img-wrapper .box-quote-img {
+        width: 100%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author,
+    section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author,
+    section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date,
+    section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date {
+        width: 90%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-button .box-button {
+        width: 90%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author {
+        width: 90%;
+    }
+
+    section#addquote .right-wrapper .box h3 {
+        font-size: 2rem;
+    }
+
+    section#addquote {
+        margin: 0 0 50px 0;
+    }
+
+    section#addquote .right-wrapper .box input[type="submit"] {
+        margin-top: 0;
+    }
 }
 
 @media (max-width: 400px) {
@@ -3462,6 +3558,25 @@ footer p a:hover {
     section#main-quote .left-wrapper .box .quote-box .quote-box-info .information p {
         padding: 5px 12.5px;
         margin: 0 5px;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-name-author .box-name-author,
+    section#addquote .right-wrapper .box form .wrapper-surname-author .box-surname-author,
+    section#addquote .right-wrapper .box form .wrapper-born-date .box-born-date,
+    section#addquote .right-wrapper .box form .wrapper-death-date .box-death-date {
+        width: 100%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-button .box-button {
+        width: 100%;
+    }
+
+    section#addquote .right-wrapper .box form .wrapper-img-author .box-img-author {
+        width: 100%;
+    }
+
+    section#addquote .right-wrapper {
+        padding: 50px 20px 0 20px;
     }
 }
 
