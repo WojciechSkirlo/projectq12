@@ -321,7 +321,7 @@ try {
                     }
                     $how_many = $result->num_rows;
                     if ($how_many > 0) {
-                        echo "<h3 class='info'>Author's quotes</h3>";
+                        echo "<h3 class='info'>User added quotes</h3>";
                         echo '<div class="wrapper-box">';
                         while ($row = $result->fetch_assoc()) {
                             echo '<div class="box">';
