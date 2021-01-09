@@ -1003,6 +1003,10 @@ section#category-quotes .wrapper .user-section {
     align-items: center;
 }
 
+section#category-quotes {
+    margin-bottom: 75px;
+}
+
 section#category-quotes .wrapper .user-section {
     margin-bottom: 50px;
 }
@@ -1434,16 +1438,19 @@ section#category-quotes .wrapper .box .add-box a:hover {
 }
 
 /* Pagination */
-#pagination {
+#pagination,
+section #pagination {
     text-align: center;
     padding: 30px;
     display: flex;
     justify-content: center;
 }
 
-#pagination .pagination-page {
+#pagination .pagination-page,
+section#category-quotes #pagination .pagination-page {
     flex-basis: 40px;
     height: 40px;
+    width: 40px;
     margin: 5px;
     display: flex;
     justify-content: center;
@@ -1451,11 +1458,13 @@ section#category-quotes .wrapper .box .add-box a:hover {
     transition: 250ms cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-#pagination .pagination-page a:hover {
+#pagination .pagination-page a:hover,
+section#category-quotes #pagination .pagination-page a:hover {
     opacity: 0.9;
 }
 
-#pagination .pagination-page a {
+#pagination .pagination-page a,
+section#category-quotes #pagination .pagination-page a {
     flex-basis: 100%;
     background: var(--third-color);
     height: 100%;
@@ -1468,7 +1477,8 @@ section#category-quotes .wrapper .box .add-box a:hover {
     color: #fff;
 }
 
-#pagination .pagination-page a.active {
+#pagination .pagination-page a.active,
+section#category-quotes #pagination .pagination-page a.active {
     opacity: 0.9;
 }
 

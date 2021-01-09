@@ -325,30 +325,30 @@ try {
 
             ?>
         </div>
-    </section>
-    <?php
-    if ($number_of_pages > 1) {
-        echo '<div id="pagination">';
-        for ($page = 1; $page <= $number_of_pages; $page++) {
-            if ($number_of_pages != 1) {
-                echo '<div class="pagination-page"><a href="category.php?id_category=' . $categories_id . '&page=' . $page . '" class="';
-                if ($page == $_GET['page']) {
-                    echo "active";
+        <?php
+        if ($number_of_pages > 1) {
+            echo '<div id="pagination">';
+            for ($page = 1; $page <= $number_of_pages; $page++) {
+                if ($number_of_pages != 1) {
+                    echo '<div class="pagination-page"><a href="category.php?id_category=' . $categories_id . '&page=' . $page . '" class="';
+                    if ($page == $_GET['page']) {
+                        echo "active";
+                    }
+                    echo '">' . $page . '</a></div>';
                 }
-                echo '">' . $page . '</a></div>';
             }
+            echo '</div>';
         }
-        echo '</div>';
-    }
-    ?>
-    <section id="authors">
+        ?>
+    </section>
+    <!-- <section id="authors">
         <div class="wrapper">
             <div class="box"></div>
             <div class="box"></div>
             <div class="box"></div>
             <div class="box"></div>
         </div>
-    </section>
+    </section> -->
     <section id="quote-img">
         <div class="quote-box">
             <?php

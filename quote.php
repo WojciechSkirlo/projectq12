@@ -302,17 +302,14 @@ try {
             </div>
         </div>
     </section>
-
-    <?php
-    ?>
-    <section id="authors">
+    <!-- <section id="authors">
         <div class="wrapper">
             <div class="box"></div>
             <div class="box"></div>
             <div class="box"></div>
             <div class="box"></div>
         </div>
-    </section>
+    </section> -->
     <section id="quote-img">
         <div class="quote-box">
             <?php
