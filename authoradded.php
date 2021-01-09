@@ -1,11 +1,11 @@
 <?php
 session_start();
-// if (!isset($_SESSION['logged']) || (!isset($_SESSION['successful_author_add']))) {
-//     header('Location: index.php');
-//     exit();
-// } else {
-//     unset($_SESSION['successful_author_add']);
-// }
+if (!isset($_SESSION['logged']) || (!isset($_SESSION['successful_author_add']))) {
+    header('Location: index.php');
+    exit();
+} else {
+    unset($_SESSION['successful_author_add']);
+}
 
 //Delete variables from form add_quote
 if (isset($_SESSION['fr_author_name'])) unset($_SESSION['fr_author_name']);
